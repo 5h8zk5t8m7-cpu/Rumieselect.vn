@@ -134,7 +134,7 @@
           <button onclick="filterCategory('tops')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="tops">上衣襯衫</button>
           <button onclick="filterCategory('bottoms')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="bottoms">洋裝下著</button>
           <button onclick="filterCategory('outerwear')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="outerwear">外套外搭</button>
-          <button onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="accessories">包款配件</button>
+         <button onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="accessories">鞋包配件</button>
         </div>
         <div class="text-xs text-stone-500 font-light text-right" id="product-count">
           顯示 0 件選品
@@ -1004,7 +1004,9 @@
                   cat = 'bottoms';
                 } else if (cat.includes('外套') || cat.includes('罩衫') || cat === 'outerwear') {
                   cat = 'outerwear';
-                } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat === 'accessories') {
+               } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat.includes('鞋') || cat === 'accessories' || cat === 'shoes') {
+  cat = 'accessories';
+}
                   cat = 'accessories';
                 } else {
                   cat = 'tops';
