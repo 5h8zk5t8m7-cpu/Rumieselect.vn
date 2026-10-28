@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rumie 越南代購｜連線選品與訂單追蹤</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- PapaParse: 用於解析 Google 試算表 CSV -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FAF8F5',
+              100: '#F4EFEA',
+              200: '#E6DDD5',
+              500: '#8C7A6B',
+              600: '#756456',
+              800: '#423830',
+              900: '#26201B'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Noto Sans TC"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-[#FAF8F5] text-stone-800 antialiased min-h-screen flex flex-col selection:bg-stone-200">
+
+  <!-- 頂部公告列 -->
+  <div class="bg-stone-900 text-stone-200 text-xs py-2 px-4 text-center tracking-widest font-light flex items-center justify-center gap-2">
+    <span>🇻🇳 RUMIE VIETNAM SELECT</span>
+  </div>
+
+  <!-- 導覽列 Navigation -->
+  <header class="sticky top-0 z-40 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-stone-200/80 transition-all">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <!-- 品牌 Logo -->
+      <a href="#" class="flex flex-col">
+        <span class="text-2xl font-serif tracking-wider font-semibold text-stone-900">Rumie</span>
+        <span class="text-[9px] tracking-[0.2em] text-stone-500 uppercase -mt-1">Vietnam Select</span>
+      </a>
+
+      <!-- 頁籤與社群按鈕 -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <nav class="flex items-center bg-stone-200/60 p-1 rounded-full text-xs font-medium text-stone-600">
+          <button id="tab-shop-btn" onclick="switchTab('shop')" class="px-3.5 py-1.5 rounded-full transition-all bg-white text-stone-900 shadow-sm">
+            選品型錄
+          </button>
+          <button id="tab-track-btn" onclick="switchTab('track')" class="px-3.5 py-1.5 rounded-full transition-all hover:text-stone-900">
+            訂單進度
+          </button>
+        </nav>
+
+        <!-- 社群快速入口 (LINE, IG, Threads) -->
+        <div class="hidden sm:flex items-center gap-2 border-l border-stone-300 pl-3">
+          <a href="https://lin.ee/pbP9jv1i" target="_blank" rel="noopener noreferrer" 
+             class="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 rounded-full transition hover:bg-emerald-100">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span class="font-medium">官方 LINE</span>
+          </a>
+          <a href="https://www.instagram.com/rumie.select.vt?xtok=N3V5YmFzcno2OW42&utm_source=qr" target="_blank" rel="noopener noreferrer" 
+             class="flex items-center gap-1.5 text-xs text-stone-600 hover:text-stone-900 bg-white/80 border border-stone-200 px-2.5 py-1.5 rounded-full transition hover:border-stone-400">
+            <i data-lucide="instagram" class="w-3.5 h-3.5 text-stone-700"></i>
+            <span>IG</span>
+          </a>
+          <a href="https://www.threads.com/@rumie.select.vt?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" 
+             class="flex items-center gap-1.5 text-xs text-stone-600 hover:text-stone-900 bg-white/80 border border-stone-200 px-2.5 py-1.5 rounded-full transition hover:border-stone-400">
+            <svg class="w-3.5 h-3.5 fill-current text-stone-700" viewBox="0 0 192 192">
+              <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6145 63.5383 90.6409 61.1685 97.1627 61.1685C110.1 61.1685 119.537 69.3496 121.282 82.2037C114.167 80.4905 106.31 79.7997 97.7777 80.148C74.6198 81.0858 59.9575 92.4842 61.0829 108.647C62.0673 122.795 73.8409 131.787 88.7501 131.787C105.748 131.787 117.842 121.841 123.003 108.43C127.355 116.349 133.916 121.731 143.084 121.731C154.673 121.731 163.504 113.626 163.504 99.3093C163.504 63.266 135.083 31.5 97.222 31.5C59.9575 31.5 28.5 61.4727 28.5 100.082C28.5 138.835 59.9575 168.808 97.222 168.808C117.067 168.808 134.619 160.672 146.425 146.852L133.684 135.498C124.639 146.126 111.954 152.384 97.222 152.384C69.0437 152.384 45.4124 128.847 45.4124 100.082C45.4124 71.4608 69.0437 47.9242 97.222 47.9242C126.837 47.9242 147.08 72.822 147.08 99.3093C147.08 105.158 143.725 108.204 139.778 108.204C134.82 108.204 130.655 103.528 127.702 96.0689C133.308 93.1818 137.986 90.761 141.537 88.9883ZM98.3905 115.363C88.0264 115.363 80.0801 109.919 79.5293 102.008C78.9619 93.8587 86.6433 87.7289 98.4069 87.2536C105.41 86.9712 112.001 87.7077 118.067 89.4449C115.658 105.777 107.568 115.363 98.3905 115.363Z"/>
+            </svg>
+            <span>Threads</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+    
+    <!-- 頁籤 1：選品型錄 (Shop Tab) -->
+    <section id="view-shop" class="space-y-8">
+      
+      <!-- 品牌精神橫幅 -->
+      <div class="relative bg-white border border-stone-200/80 rounded-2xl p-6 sm:p-8 overflow-hidden shadow-sm">
+        <div class="max-w-xl relative z-10 space-y-3">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-stone-100 text-stone-600 text-xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            本期越南連線即時更新中
+          </div>
+          
+          <p class="text-sm text-stone-600 leading-relaxed">
+            全館選品皆為越南門市採購正品。於本頁選好規格後，點擊可直接線上填單與回報匯款，或複製訊息至官方 LINE 訂購，後續包裹一律經由 7-11 賣貨便寄出。
+          </p>
+          <div class="pt-2 flex flex-wrap items-center gap-2">
+            <a href="https://lin.ee/pbP9jv1i" target="_blank" 
+               class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-800 bg-emerald-100/70 hover:bg-emerald-200/70 px-3 py-1.5 rounded-lg transition">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 加入官方 LINE 詢問
+            </a>
+            <a href="https://www.instagram.com/rumie.select.vt?xtok=N3V5YmFzcno2OW42&utm_source=qr" target="_blank" 
+               class="inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg transition">
+              <i data-lucide="instagram" class="w-3.5 h-3.5"></i> Instagram 連線實況
+            </a>
+            <a href="https://www.threads.com/@rumie.select.vt?igshid=NTc4MTIwNjQ2YQ==" target="_blank" 
+               class="inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg transition">
+              <span class="font-bold">@</span> Threads 花絮
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分類篩選與商品數量 -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/80 pb-4">
+        <!-- 分類標籤 -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+          <button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white" data-cat="all">全部選品</button>
+          <button onclick="filterCategory('tops')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="tops">上衣襯衫</button>
+          <button onclick="filterCategory('bottoms')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="bottoms">洋裝下著</button>
+          <button onclick="filterCategory('outerwear')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="outerwear">外套外搭</button>
+          <button onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="accessories">包款配件</button>
+        </div>
+        <div class="text-xs text-stone-500 font-light text-right" id="product-count">
+          顯示 0 件選品
+        </div>
+      </div>
+
+      <!-- 商品網格清單 -->
+      <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- JS 動態渲染或空狀態呈現 -->
+      </div>
+    </section>
+
+    <!-- 頁籤 2：訂單進度追蹤 (Tracking Tab) -->
+    <section id="view-track" class="max-w-2xl mx-auto space-y-6 hidden">
+      <div class="text-center space-y-2 mb-8">
+        <h2 class="text-2xl font-serif font-bold text-stone-900">連線包裹進度查詢</h2>
+        <p class="text-xs sm:text-sm text-stone-500">輸入下單時填寫之「手機號碼」或「訂單編號（如 RM-901）」即時查詢貨況</p>
+      </div>
+
+      <!-- 查詢輸入框 -->
+      <div class="bg-white p-2 rounded-2xl border border-stone-200 shadow-sm flex items-center gap-2">
+        <div class="pl-3 text-stone-400">
+          <i data-lucide="search" class="w-5 h-5"></i>
+        </div>
+        <input type="text" id="track-input" placeholder="請輸入手機號碼 (如 0912345678) 或訂單編號" 
+               class="flex-1 bg-transparent border-0 text-sm focus:outline-none text-stone-800 placeholder-stone-400 py-2">
+        <button onclick="handleSearchOrder()" class="bg-stone-900 text-white px-5 py-2.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition">
+          查詢進度
+        </button>
+      </div>
+
+      <!-- 查詢結果區塊 (動態呈現) -->
+      <div id="tracking-result" class="space-y-4">
+        <!-- 初始無查詢時提示 -->
+        <div class="p-8 text-center bg-white/60 border border-dashed border-stone-200 rounded-2xl text-stone-400 text-xs">
+          請於上方輸入資料查詢您的採購進度與賣貨便單號
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 彈窗 1：商品詳情與規格選取 (Product Modal) -->
+  <div id="product-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- 彈窗頂部關閉 -->
+      <div class="flex items-center justify-between p-4 border-b border-stone-100">
+        <span class="text-xs uppercase tracking-wider text-stone-400 font-mono" id="modal-product-id">VN000</span>
+        <button onclick="closeProductModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded-full hover:bg-stone-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 彈窗內容可滾動區 -->
+      <div class="overflow-y-auto p-5 sm:p-6 space-y-6 flex-1">
+        
+        <!-- 圖片展示 -->
+        <div class="space-y-2">
+          <div class="aspect-[3/4] bg-stone-100 rounded-xl overflow-hidden">
+            <img id="modal-main-image" src="" alt="商品預覽" class="w-full h-full object-cover">
+          </div>
+          <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto py-1"></div>
+        </div>
+
+        <!-- 基本資料 -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span id="modal-tag" class="text-[10px] tracking-wider px-2 py-0.5 rounded-full bg-stone-100 text-stone-700 font-medium">連線中</span>
+            <span id="modal-cat" class="text-[10px] text-stone-400 uppercase tracking-widest">TOPS</span>
+          </div>
+          <h3 id="modal-name" class="text-lg sm:text-xl font-medium text-stone-900">商品名稱</h3>
+          <div class="text-xl font-serif font-bold text-stone-900" id="modal-price">NT$ 0</div>
+        </div>
+
+        <!-- 規格選擇：顏色 -->
+        <div class="space-y-2" id="color-selection-wrap">
+          <label class="text-xs font-semibold text-stone-700 tracking-wider">選擇顏色</label>
+          <div id="modal-colors" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- 規格選擇：尺寸 -->
+        <div class="space-y-2" id="size-selection-wrap">
+          <label class="text-xs font-semibold text-stone-700 tracking-wider">選擇尺寸</label>
+          <div id="modal-sizes" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- 商品描述與平量 -->
+        <div class="space-y-2 border-t border-stone-100 pt-4">
+          <label class="text-xs font-semibold text-stone-700 tracking-wider">商品介紹與平量規格</label>
+          <p id="modal-desc" class="text-xs text-stone-600 leading-relaxed whitespace-pre-line bg-stone-50 p-3 rounded-xl border border-stone-100"></p>
+        </div>
+      </div>
+
+      <!-- 彈窗底部操作列：組裝下單與直接結帳按鈕 -->
+      <div class="p-4 bg-stone-50 border-t border-stone-100 space-y-2">
+        <div class="flex items-center justify-between text-xs text-stone-500">
+          <span>已選規格：<strong id="selected-spec-text" class="text-stone-800">請選取規格</strong></span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="copyOrderMessage()" class="w-full bg-stone-200 text-stone-800 py-2.5 rounded-xl text-xs font-medium hover:bg-stone-300 transition flex items-center justify-center gap-1.5">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            複製明細開 LINE
+          </button>
+          <button onclick="openCheckoutModal()" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+            立即填單匯款
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 彈窗 2：線上結帳與匯款回報表單 (Checkout Modal) -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- 結帳標題 -->
+      <div class="flex items-center justify-between p-4 border-b border-stone-100">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <h3 class="text-sm font-semibold text-stone-900 font-serif">線上填單與匯款回報</h3>
+        </div>
+        <button onclick="closeCheckoutModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded-full hover:bg-stone-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 結帳表單內容區 -->
+      <form id="checkout-form" onsubmit="handleFormSubmit(event)" class="overflow-y-auto p-5 sm:p-6 space-y-5 flex-1 text-xs">
+        
+        <!-- 訂購商品摘要 -->
+        <div class="bg-stone-50 border border-stone-200/80 p-3.5 rounded-xl space-y-1.5">
+          <div class="text-stone-400 font-medium">訂購品項摘要</div>
+          <div class="font-medium text-stone-800 text-sm" id="checkout-item-title">商品名稱 (規格)</div>
+          <div class="flex justify-between items-center pt-1 border-t border-stone-200/60">
+            <span class="text-stone-500">應匯款金額：</span>
+            <span class="text-base font-serif font-bold text-stone-900" id="checkout-item-price">NT$ 0</span>
+          </div>
+        </div>
+
+        <!-- 匯款帳號資訊卡 -->
+        <div class="bg-amber-50/60 border border-amber-200/80 p-3.5 rounded-xl space-y-2">
+          <div class="flex items-center justify-between text-amber-900 font-medium">
+            <span>Rumie 官方匯款帳號</span>
+            <button type="button" onclick="copyBankAccount()" class="text-[11px] underline hover:text-amber-950 flex items-center gap-1">
+              <i data-lucide="copy" class="w-3 h-3"></i> 複製帳號
+            </button>
+          </div>
+          <div class="text-stone-700 space-y-0.5">
+            <p><strong>銀行代碼：</strong> 812 台新銀行</p>
+            <p><strong>帳號號碼：</strong> <span id="bank-acc-text" class="font-mono font-semibold">2888-10-00123456</span></p>
+            <p><strong>戶名：</strong> Rumie 連線代購</p>
+          </div>
+          <p class="text-[11px] text-amber-800/80 leading-relaxed pt-1 border-t border-amber-200/60">
+            請於填單前後完成轉帳，後續將以您回報的「帳號末五碼」於試算表即時對帳。
+          </p>
+        </div>
+
+        <!-- 填寫個人與匯款資訊 -->
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">姓名 / 稱呼 <span class="text-red-500">*</span></label>
+              <input type="text" id="cust-name" required placeholder="如：林小姐" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">手機號碼 (查單帳號) <span class="text-red-500">*</span></label>
+              <input type="tel" id="cust-phone" required placeholder="0912345678" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">匯款帳號末五碼 <span class="text-red-500">*</span></label>
+              <input type="text" id="cust-last5" required maxlength="5" placeholder="後 5 碼數字" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">LINE / IG 帳號 (緊急聯絡)</label>
+              <input type="text" id="cust-social" placeholder="如：@rumie" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="font-medium text-stone-700">7-11 賣貨便取件門市 <span class="text-red-500">*</span></label>
+            <input type="text" id="cust-store" required placeholder="請填寫 7-11 門市名稱與 6 碼店號 (如：鑫莊門市 192834)" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+          </div>
+        </div>
+
+        <!-- 隱私與代購同意勾選 -->
+        <div class="flex items-start gap-2 pt-1 text-[11px] text-stone-500">
+          <input type="checkbox" id="terms-agree" required class="mt-0.5 rounded border-stone-300">
+          <label for="terms-agree">我已確認匯款資訊與訂購品項無誤，並同意代購連線預購流程規範。</label>
+        </div>
+
+        <!-- 提交按鈕與狀態 -->
+        <div class="pt-2">
+          <button type="submit" id="submit-order-btn" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            確認並送出訂單
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- 頁尾 Footer -->
+  <footer class="border-t border-stone-200/80 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+      <div class="flex flex-col items-center sm:items-start gap-1">
+        <div class="font-serif font-bold text-stone-800 tracking-wider text-sm">Rumie Vietnam Select</div>
+        <p>© 2026 Rumie. All rights reserved. 越南設計小眾品牌代購</p>
+      </div>
+
+      <!-- 頁尾社群與客服連結列 -->
+      <div class="flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
+        <a href="https://lin.ee/pbP9jv1i" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 transition font-medium">
+          <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+          <span>LINE 客服</span>
+        </a>
+        <span class="text-stone-300 hidden sm:inline">|</span>
+        <a href="https://www.instagram.com/rumie.select.vt?xtok=N3V5YmFzcno2OW42&utm_source=qr" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 transition">
+          <i data-lucide="instagram" class="w-4 h-4 text-stone-700"></i>
+          <span>@rumie.select.vt</span>
+        </a>
+        <span class="text-stone-300 hidden sm:inline">|</span>
+        <a href="https://www.threads.com/@rumie.select.vt?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 transition">
+          <svg class="w-4 h-4 fill-current text-stone-700" viewBox="0 0 192 192">
+            <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6145 63.5383 90.6409 61.1685 97.1627 61.1685C110.1 61.1685 119.537 69.3496 121.282 82.2037C114.167 80.4905 106.31 79.7997 97.7777 80.148C74.6198 81.0858 59.9575 92.4842 61.0829 108.647C62.0673 122.795 73.8409 131.787 88.7501 131.787C105.748 131.787 117.842 121.841 123.003 108.43C127.355 116.349 133.916 121.731 143.084 121.731C154.673 121.731 163.504 113.626 163.504 99.3093C163.504 63.266 135.083 31.5 97.222 31.5C59.9575 31.5 28.5 61.4727 28.5 100.082C28.5 138.835 59.9575 168.808 97.222 168.808C117.067 168.808 134.619 160.672 146.425 146.852L133.684 135.498C124.639 146.126 111.954 152.384 97.222 152.384C69.0437 152.384 45.4124 128.847 45.4124 100.082C45.4124 71.4608 69.0437 47.9242 97.222 47.9242C126.837 47.9242 147.08 72.822 147.08 99.3093C147.08 105.158 143.725 108.204 139.778 108.204C134.82 108.204 130.655 103.528 127.702 96.0689C133.308 93.1818 137.986 90.761 141.537 88.9883ZM98.3905 115.363C88.0264 115.363 80.0801 109.919 79.5293 102.008C78.9619 93.8587 86.6433 87.7289 98.4069 87.2536C105.41 86.9712 112.001 87.7077 118.067 89.4449C115.658 105.777 107.568 115.363 98.3905 115.363Z"/>
+            </svg>
+            <span>Threads</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 核心資料與互動腳本 -->
+  <script>
+    lucide.createIcons();
+
+    // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
+    const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
+    const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
+    const GOOGLE_SCRIPT_API_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE";
+
+    let currentCategory = 'all';
+    // 預設內建商品（打開立刻顯示，絕不卡連線）
+    let productsData = [
+      {
+        id: "Thekat1",
+        name: "Thekat長袖襯衫",
+        tag: "上班族熱賣款",
+        category: "tops",
+        price: 980,
+        images: [
+          "https://lh3.googleusercontent.com/d/1nS3DxqaRKWrXJF1OZW7491qtn0wX5Pdg",
+          "https://lh3.googleusercontent.com/d/1vgb2YWWfaPSWnl2wjrhifV3_5kPgCDuS",
+          "https://lh3.googleusercontent.com/d/1pagtfQl2N-CJTfoUqddaQQLIAg7pdyBF",
+          "https://lh3.googleusercontent.com/d/147jDKpEosfyDZB_ignMHrBhK-tA_0Mte",
+          "https://lh3.googleusercontent.com/d/1eO1dnwMObBKG5PHgQXu4tQArp31YqKLa"
+        ],
+        colors: ["藍色", "白色"],
+        sizes: ["S", "M"],
+        desc: "版型挺實親膚，修飾身形效果極佳。通勤與日常穿搭皆適宜。"
+      }
+    ];
+    let ordersData = [
+      {
+        order_id: "RM-901",
+        phone: "0912345678",
+        customer_name: "林小姐",
+        items: "越南設計款 方領抓褶背心洋裝 (米白 / S)",
+        total_amount: 1480,
+        status_step: 3,
+        status_desc: "商品已完成胡志明門市採購，正隨當期空運班機回台途中",
+        tracking_code: "",
+        est_delivery: "2026/11/02"
+      }
+    ];
+
+    let currentActiveProduct = null;
+    let selectedColor = "";
+    let selectedSize = "";
+
+    // 自動讀取試算表
+    // 自動讀取試算表
+    // 自動讀取試算表
+    function initData() {
+      // 1. 先立即渲染已有的商品，確保客人一進來立刻看到
+      renderProducts();
+
+      // 2. 背景嘗試同步 Google 試算表（即使被瀏覽器擋下也不會影響網頁顯示）
+      if (PRODUCTS_CSV_URL && !PRODUCTS_CSV_URL.includes("YOUR_PRODUCTS_CSV_URL_HERE")) {
+        Papa.parse(PRODUCTS_CSV_URL, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            if (results.data && results.data.length > 0) {
+              const findKey = (item, candidates) => {
+                for (let c of candidates) {
+                  for (let k in item) {
+                    if (k.trim().toLowerCase() === c.toLowerCase()) return item[k];
+                  }
+                }
+                return '';
+              };
+
+              const parsed = results.data.map(item => {
+                const rawId = findKey(item, ['id', 'ID', '編號']);
+                const rawName = findKey(item, ['name', '商品名稱', '名稱']);
+                const rawTag = findKey(item, ['tag', '標籤']);
+                const rawCat = findKey(item, ['category', '分類']);
+                const rawPrice = findKey(item, ['price', '價格', '售價']);
+                const rawImages = findKey(item, ['images', '圖片', '圖片網址']);
+                const rawColors = findKey(item, ['colors', '顏色']);
+                const rawSizes = findKey(item, ['sizes', '尺寸']);
+                const rawDesc = findKey(item, ['desc', '介紹', '描述']);
+
+                let imgList = rawImages ? rawImages.split(',').map(s => s.trim()) : [];
+                let processedImages = imgList.map(url => {
+                  if (url.includes('drive.google.com/file/d/')) {
+                    let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                      return `https://lh3.googleusercontent.com/d/${match[1]}`;
+                    }
+                  }
+                  return url;
+                });
+
+                let cat = (rawCat || '').toLowerCase().trim();
+                if (cat.includes('上衣') || cat.includes('襯衫') || cat.includes('背心') || cat === 'tops') {
+                  cat = 'tops';
+                } else if (cat.includes('褲') || cat.includes('洋裝') || cat.includes('裙') || cat === 'bottoms') {
+                  cat = 'bottoms';
+                } else if (cat.includes('外套') || cat.includes('罩衫') || cat === 'outerwear') {
+                  cat = 'outerwear';
+                } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat === 'accessories') {
+                  cat = 'accessories';
+                } else {
+                  cat = 'tops';
+                }
+
+                let numPrice = Number(rawPrice.toString().replace(/[^0-9]/g, '')) || 0;
+
+                return {
+                  id: rawId,
+                  name: rawName,
+                  tag: rawTag,
+                  category: cat,
+                  price: numPrice,
+                  images: processedImages,
+                  colors: rawColors ? rawColors.split(',').map(s => s.trim()) : [],
+                  sizes: rawSizes ? rawSizes.split(',').map(s => s.trim()) : [],
+                  desc: rawDesc || ''
+                };
+              }).filter(p => p.id && p.name);
+
+              if (parsed.length > 0) {
+                productsData = parsed;
+                renderProducts();
+              }
+            }
+          }
+        });
+      }
+      } else {
+        renderProducts();
+      }
+
+      // 讀取訂單資料
+      if (ORDERS_CSV_URL && !ORDERS_CSV_URL.includes("YOUR_ORDERS_CSV_URL_HERE")) {
+        Papa.parse(ORDERS_CSV_URL, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          error: function(err) {
+            console.error("Orders CSV error:", err);
+          },
+          complete: function(results) {
+            if (results.data && results.data.length > 0) {
+              const findKey = (item, candidates) => {
+                for (let c of candidates) {
+                  for (let k in item) {
+                    if (k.trim().toLowerCase() === c.toLowerCase()) return item[k];
+                  }
+                }
+                return '';
+              };
+
+              const parsed = results.data.map(item => {
+                const oId = findKey(item, ['order_id', 'orderid', '訂單編號', '訂單號']);
+                const ph = findKey(item, ['phone', '電話', '手機', '手機號碼']);
+                const name = findKey(item, ['customer_name', 'name', '姓名', '顧客姓名']);
+                const items = findKey(item, ['items', '品項', '商品', '購買品項']);
+                const total = findKey(item, ['total_amount', 'amount', '總金額', '金額']);
+                const step = findKey(item, ['status_step', 'step', '進度', '狀態階段']);
+                const desc = findKey(item, ['status_desc', 'desc', '貨況說明', '狀態說明']);
+                const code = findKey(item, ['tracking_code', 'tracking', '物流單號', '賣貨便單號']);
+                const est = findKey(item, ['est_delivery', 'delivery', '預估抵達']);
+
+                return {
+                  order_id: (oId || '').trim(),
+                  phone: (ph || '').trim().replace(/^'/, ''),
+                  customer_name: (name || '').trim(),
+                  items: (items || '').trim(),
+                  total_amount: total ? Number(total.toString().replace(/[^0-9]/g, '')) : 0,
+                  status_step: step ? Number(step) : 1,
+                  status_desc: (desc || '已收到填單，待對帳核款中').trim(),
+                  tracking_code: (code || '').trim(),
+                  est_delivery: (est || '採購確認中').trim()
+                };
+              }).filter(o => o.order_id || o.phone);
+
+              if (parsed.length > 0) {
+                ordersData = parsed;
+              }
+            }
+          }
+        });
+      }
+    }
+
+    initData();
+  </script>
+</body>
+</html>
