@@ -743,7 +743,8 @@
       const isFreeShipping = isVip || (amount >= FREE_SHIPPING_THRESHOLD);
       
       const shippingTag = isVip ? "【熟客免運】" : (amount >= FREE_SHIPPING_THRESHOLD ? "【滿額免運】" : "【一般運費】");
-      const itemsDetail = `${currentActiveProduct.name} (${selectedColor || '默認'} / ${selectedSize || 'Free'}) ${shippingTag}`;
+     // 修改後：[商品編號] 商品名稱 (規格)
+const itemsDetail = `[${currentActiveProduct.id}] ${currentActiveProduct.name} (${selectedColor || '默認'} / ${selectedSize || 'Free'}) ${shippingTag}`;
 
       const orderPayload = {
         order_id: randomOrderId,
