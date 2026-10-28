@@ -764,24 +764,53 @@
 
     function finishOrderSuccess(order) {
       ordersData.unshift(order);
-      alert(`🎉 訂單送出成功！
+      currentOrderPhone = order.phone;
 
-您的訂單編號為：【${order.order_id}】
-已記錄您的匯款末五碼【${order.remitt_last5}】。
-稍後可於「訂單進度」頁籤輸入手機號碼查詢最新處理進度！`);
-      
+      // 重置表單並關閉前置彈窗
       document.getElementById('checkout-form').reset();
       closeCheckoutModal();
       closeProductModal();
 
-      document.getElementById('track-input').value = order.phone;
-      switchTab('track');
-      handleSearchOrder();
-
       const submitBtn = document.getElementById('submit-order-btn');
       submitBtn.disabled = false;
       submitBtn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> 確認並送出訂單`;
+
+      // 判定賣貨便目標賣場與說明
+      const isFree = order.is_free_shipping;
+      const targetUrl = isFree ? SHIP_FREE_URL : SHIP_NORMAL_URL;
+      
+      document.getElementById('succ-order-id').innerText = order.order_id;
+      document.getElementById('succ-order-memo').innerText = order.order_id;
+      document.getElementById('succ-myship-btn').href = targetUrl;
+
+      const badge = document.getElementById('succ-shipping-badge');
+      const desc = document.getElementById('succ-shipping-desc');
+      const box = document.getElementById('shipping-status-box');
+
+      if (isFree) {
+        badge.className = "text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+        badge.innerText = order.shipping_tag ? order.shipping_tag.replace(/【|】/g, '') : "免運專屬賣場";
+        desc.innerText = "您本次訂購享有免運資格！請點擊下方按鈕前往【7-11 賣貨便免運專場】選擇取件超商門市。";
+        box.className = "p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-2 text-left";
+      } else {
+        badge.className = "text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-stone-200 text-stone-700";
+        badge.innerText = "一般運費賣場";
+        desc.innerText = "本次訂單未達免運門檻，請點擊下方按鈕前往【7-11 賣貨便賣場】選擇取件超商門市並完成寄件建立。";
+        box.className = "p-4 rounded-xl border border-stone-200 bg-stone-50 space-y-2 text-left";
+      }
+
+      // 開啟成功彈窗
+      document.getElementById('order-success-modal').classList.remove('hidden');
       lucide.createIcons();
+    }
+
+    function closeSuccessAndGoTrack() {
+      document.getElementById('order-success-modal').classList.add('hidden');
+      if (currentOrderPhone) {
+        document.getElementById('track-input').value = currentOrderPhone;
+        switchTab('track');
+        handleSearchOrder();
+      }
     }
 
     // 訂單查詢功能
@@ -876,144 +905,4 @@
           </div>
         </div>
       `;
-      lucide.createIcons();
-    }
-
-    // 自動讀取試算表
-    function initData() {
-      // 1. 先立即渲染已有的商品，確保客人一進來立刻看到
-      renderProducts();
-
-      // 2. 背景嘗試同步 Google 試算表
-      if (PRODUCTS_CSV_URL && !PRODUCTS_CSV_URL.includes("YOUR_PRODUCTS_CSV_URL_HERE")) {
-        Papa.parse(PRODUCTS_CSV_URL, {
-          download: true,
-          header: true,
-          skipEmptyLines: true,
-          complete: function(results) {
-            if (results.data && results.data.length > 0) {
-              const findKey = (item, candidates) => {
-                for (let c of candidates) {
-                  for (let k in item) {
-                    if (k.trim().toLowerCase() === c.toLowerCase()) return item[k];
-                  }
-                }
-                return '';
-              };
-
-              const parsed = results.data.map(item => {
-                const rawId = findKey(item, ['id', 'ID', '編號']);
-                const rawName = findKey(item, ['name', '商品名稱', '名稱']);
-                const rawTag = findKey(item, ['tag', '標籤']);
-                const rawCat = findKey(item, ['category', '分類']);
-                const rawPrice = findKey(item, ['price', '價格', '售價']);
-                const rawImages = findKey(item, ['images', '圖片', '圖片網址']);
-                const rawColors = findKey(item, ['colors', '顏色']);
-                const rawSizes = findKey(item, ['sizes', '尺寸']);
-                const rawDesc = findKey(item, ['desc', '介紹', '描述']);
-
-                let imgList = rawImages ? rawImages.split(',').map(s => s.trim()) : [];
-                let processedImages = imgList.map(url => {
-                  if (url.includes('drive.google.com/file/d/')) {
-                    let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                    if (match && match[1]) {
-                      return `https://lh3.googleusercontent.com/d/${match[1]}`;
-                    }
-                  }
-                  return url;
-                });
-
-                let cat = (rawCat || '').toLowerCase().trim();
-                if (cat.includes('上衣') || cat.includes('襯衫') || cat.includes('背心') || cat === 'tops') {
-                  cat = 'tops';
-                } else if (cat.includes('褲') || cat.includes('洋裝') || cat.includes('裙') || cat === 'bottoms') {
-                  cat = 'bottoms';
-                } else if (cat.includes('外套') || cat.includes('罩衫') || cat === 'outerwear') {
-                  cat = 'outerwear';
-                } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat === 'accessories') {
-                  cat = 'accessories';
-                } else {
-                  cat = 'tops';
-                }
-
-                let numPrice = Number(rawPrice.toString().replace(/[^0-9]/g, '')) || 0;
-
-                return {
-                  id: rawId,
-                  name: rawName,
-                  tag: rawTag,
-                  category: cat,
-                  price: numPrice,
-                  images: processedImages,
-                  colors: rawColors ? rawColors.split(',').map(s => s.trim()) : [],
-                  sizes: rawSizes ? rawSizes.split(',').map(s => s.trim()) : [],
-                  desc: rawDesc || ''
-                };
-              }).filter(p => p.id && p.name);
-
-              if (parsed.length > 0) {
-                productsData = parsed;
-                renderProducts();
-              }
-            }
-          }
-        });
-      }
-
-      // 讀取訂單資料
-      if (ORDERS_CSV_URL && !ORDERS_CSV_URL.includes("YOUR_ORDERS_CSV_URL_HERE")) {
-        Papa.parse(ORDERS_CSV_URL, {
-          download: true,
-          header: true,
-          skipEmptyLines: true,
-          error: function(err) {
-            console.error("Orders CSV error:", err);
-          },
-          complete: function(results) {
-            if (results.data && results.data.length > 0) {
-              const findKey = (item, candidates) => {
-                for (let c of candidates) {
-                  for (let k in item) {
-                    if (k.trim().toLowerCase() === c.toLowerCase()) return item[k];
-                  }
-                }
-                return '';
-              };
-
-              const parsed = results.data.map(item => {
-                const oId = findKey(item, ['order_id', 'orderid', '訂單編號', '訂單號']);
-                const ph = findKey(item, ['phone', '電話', '手機', '手機號碼']);
-                const name = findKey(item, ['customer_name', 'name', '姓名', '顧客姓名']);
-                const items = findKey(item, ['items', '品項', '商品', '購買品項']);
-                const total = findKey(item, ['total_amount', 'amount', '總金額', '金額']);
-                const step = findKey(item, ['status_step', 'step', '進度', '狀態階段']);
-                const desc = findKey(item, ['status_desc', 'desc', '貨況說明', '狀態說明']);
-                const code = findKey(item, ['tracking_code', 'tracking', '物流單號', '賣貨便單號']);
-                const est = findKey(item, ['est_delivery', 'delivery', '預估抵達']);
-
-                return {
-                  order_id: (oId || '').trim(),
-                  phone: (ph || '').trim().replace(/^'/, ''),
-                  customer_name: (name || '').trim(),
-                  items: (items || '').trim(),
-                  total_amount: total ? Number(total.toString().replace(/[^0-9]/g, '')) : 0,
-                  status_step: step ? Number(step) : 1,
-                  status_desc: (desc || '已收到填單，待對帳核款中').trim(),
-                  tracking_code: (code || '').trim(),
-                  est_delivery: (est || '採購確認中').trim()
-                };
-              }).filter(o => o.order_id || o.phone);
-
-              if (parsed.length > 0) {
-                ordersData = parsed;
-              }
-            }
-          }
-        });
-      }
-    }
-
-    initData();
-  </script>
-</body>
-</html>
+      luc
