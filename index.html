@@ -1004,14 +1004,13 @@
                   cat = 'bottoms';
                 } else if (cat.includes('外套') || cat.includes('罩衫') || cat === 'outerwear') {
                   cat = 'outerwear';
-               } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat.includes('鞋') || cat === 'accessories' || cat === 'shoes') {
-  cat = 'accessories';
-}
+              } else if (cat.includes('外套') || cat.includes('罩衫') || cat === 'outerwear') {
+                  cat = 'outerwear';
+                } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat.includes('鞋') || cat === 'accessories' || cat === 'shoes') {
                   cat = 'accessories';
                 } else {
                   cat = 'tops';
                 }
-
                 let numPrice = Number(rawPrice.toString().replace(/[^0-9]/g, '')) || 0;
 
                 return {
