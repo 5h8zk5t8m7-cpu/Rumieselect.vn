@@ -235,20 +235,58 @@
           <span>已選規格：<strong id="selected-spec-text" class="text-stone-800">請選取規格</strong></span>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="copyOrderMessage()" class="w-full bg-stone-200 text-stone-800 py-2.5 rounded-xl text-xs font-medium hover:bg-stone-300 transition flex items-center justify-center gap-1.5">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            複製明細開 LINE
-          </button>
-          <button onclick="openCheckoutModal()" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
-            <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
-            立即填單匯款
-          </button>
-        </div>
+  <button type="button" onclick="addToCartCurrent()" class="w-full bg-stone-100 hover:bg-stone-200 text-stone-800 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 border border-stone-300">
+    <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-stone-700"></i>
+    加入購物車
+  </button>
+  <button type="button" onclick="buyNowCurrent()" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
+    <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+    立即填單結帳
+  </button>
+</div>
       </div>
 
     </div>
   </div>
+<!-- 懸浮購物車圓形按鈕 (右下角) -->
+  <button id="floating-cart-btn" onclick="openCartDrawer()" class="fixed bottom-6 right-6 z-40 bg-stone-900 text-white p-3.5 rounded-full shadow-2xl hover:scale-105 transition flex items-center justify-center border-2 border-stone-100">
+    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+    <span id="floating-cart-badge" class="absolute -top-1 -right-1 bg-amber-600 text-white font-mono text-[10px] w-5 h-5 rounded-full flex items-center justify-center hidden font-bold">0</span>
+  </button>
 
+  <!-- 購物車側邊抽屜 (Cart Drawer) -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex justify-end transition-opacity">
+    <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+      <div class="flex items-center justify-between p-4 border-b border-stone-100">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-stone-800"></i>
+          <h3 class="font-serif font-bold text-stone-900 text-base">購物清單</h3>
+          <span id="cart-total-qty" class="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-mono">0 件</span>
+        </div>
+        <button onclick="closeCartDrawer()" class="p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 免運進度提示 -->
+      <div class="bg-amber-50/70 border-b border-amber-100 p-3 text-xs" id="cart-free-ship-box"></div>
+
+      <!-- 購物車清單列表 -->
+      <div id="cart-items-wrap" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+
+      <!-- 底部結帳列 -->
+      <div class="p-4 bg-stone-50 border-t border-stone-100 space-y-3">
+        <div class="flex items-center justify-between text-xs text-stone-500">
+          <span>商品總計</span>
+          <span id="cart-subtotal" class="text-base font-serif font-bold text-stone-900">NT$ 0</span>
+        </div>
+        <button onclick="proceedToCheckoutFromCart()" id="cart-checkout-btn" class="w-full bg-stone-900 text-white py-3.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition flex items-center justify-center gap-2 shadow-sm">
+          <span>前往結帳匯款</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- 彈窗 2：線上結帳與匯款回報表單 (Checkout Modal) -->
   <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
@@ -458,6 +496,131 @@
     const FREE_SHIPPING_THRESHOLD = 2000; // 滿 2000 免運
 
     let currentOrderPhone = "";
+    // ★★★ 購物車系統 (Cart System) ★★★
+    let cart = [];
+
+    // 加入購物車
+    function addToCartCurrent() {
+      if (!currentActiveProduct) return;
+      const item = {
+        id: currentActiveProduct.id,
+        name: currentActiveProduct.name,
+        price: Number(currentActiveProduct.price) || 0,
+        color: selectedColor || '默認',
+        size: selectedSize || 'Free',
+        image: (currentActiveProduct.images && currentActiveProduct.images.length > 0) ? currentActiveProduct.images[0] : '',
+        qty: 1
+      };
+      const exist = cart.find(c => c.id === item.id && c.color === item.color && c.size === item.size);
+      if (exist) {
+        exist.qty += 1;
+      } else {
+        cart.push(item);
+      }
+      updateCartBadge();
+      closeProductModal();
+      openCartDrawer();
+    }
+
+    // 立即購買
+    function buyNowCurrent() {
+      if (!currentActiveProduct) return;
+      addToCartCurrent();
+      closeCartDrawer();
+      openCheckoutModal();
+    }
+
+    // 更新紅點數量徽章
+    function updateCartBadge() {
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      const floatBadge = document.getElementById('floating-cart-badge');
+      const totalQtyEl = document.getElementById('cart-total-qty');
+      if (floatBadge) {
+        if (count > 0) { floatBadge.innerText = count; floatBadge.classList.remove('hidden'); }
+        else { floatBadge.classList.add('hidden'); }
+      }
+      if (totalQtyEl) totalQtyEl.innerText = `${count} 件`;
+    }
+
+    function openCartDrawer() {
+      renderCart();
+      const drawer = document.getElementById('cart-drawer');
+      if (drawer) drawer.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCartDrawer() {
+      const drawer = document.getElementById('cart-drawer');
+      if (drawer) drawer.classList.add('hidden');
+    }
+
+    function changeCartQty(idx, delta) {
+      if (!cart[idx]) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      updateCartBadge();
+      renderCart();
+    }
+
+    function removeCartItem(idx) {
+      if (!cart[idx]) return;
+      cart.splice(idx, 1);
+      updateCartBadge();
+      renderCart();
+    }
+
+    function renderCart() {
+      const wrap = document.getElementById('cart-items-wrap');
+      const subtotalEl = document.getElementById('cart-subtotal');
+      const freeShipBox = document.getElementById('cart-free-ship-box');
+      const checkoutBtn = document.getElementById('cart-checkout-btn');
+      if (!wrap) return;
+
+      const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      if (subtotalEl) subtotalEl.innerText = `NT$ ${total.toLocaleString()}`;
+
+      if (freeShipBox) {
+        if (total >= FREE_SHIPPING_THRESHOLD) {
+          freeShipBox.innerHTML = `<span class="text-emerald-800 font-medium">🎉 已達滿 NT$ 2,000 免運門檻！</span>`;
+        } else {
+          const diff = FREE_SHIPPING_THRESHOLD - total;
+          freeShipBox.innerHTML = `<span>距離滿 NT$ 2,000 免運還差 <strong>NT$ ${diff.toLocaleString()}</strong></span>`;
+        }
+      }
+
+      if (cart.length === 0) {
+        wrap.innerHTML = `<div class="py-12 text-center text-stone-400 text-xs">購物車目前是空的</div>`;
+        if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.classList.add('opacity-50'); }
+        return;
+      }
+      if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.classList.remove('opacity-50'); }
+
+      wrap.innerHTML = cart.map((item, idx) => `
+        <div class="flex items-center gap-3 p-2 rounded-xl border border-stone-100 bg-stone-50">
+          <img src="${item.image}" class="w-12 h-16 object-cover rounded bg-stone-200">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-medium text-stone-800 truncate">${item.name}</h4>
+            <p class="text-[10px] text-stone-400">${item.color} / ${item.size}</p>
+            <div class="text-xs font-bold text-stone-900">NT$ ${item.price.toLocaleString()}</div>
+          </div>
+          <div class="flex flex-col items-end gap-1">
+            <button onclick="removeCartItem(${idx})" class="text-stone-300 hover:text-red-500 text-xs">✕</button>
+            <div class="flex items-center border rounded bg-white text-xs">
+              <button onclick="changeCartQty(${idx}, -1)" class="px-2 py-0.5">-</button>
+              <span class="px-2">${item.qty}</span>
+              <button onclick="changeCartQty(${idx}, 1)" class="px-2 py-0.5">+</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function proceedToCheckoutFromCart() {
+      if (cart.length === 0) return;
+      closeCartDrawer();
+      openCheckoutModal();
+    }
 
     // 更新結帳彈窗中的免運提示
     function updateCheckoutShippingStatus() {
@@ -738,20 +901,21 @@
       const store = document.getElementById('cust-store').value.trim();
 
       const randomOrderId = "RM-" + Math.floor(100 + Math.random() * 900);
-      const amount = Number(currentActiveProduct.price) || 0;
+      const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
       const isVip = document.getElementById('cust-vip') ? document.getElementById('cust-vip').checked : false;
-      const isFreeShipping = isVip || (amount >= FREE_SHIPPING_THRESHOLD);
+      const isFreeShipping = isVip || (totalAmount >= FREE_SHIPPING_THRESHOLD);
+
+      const shippingTag = isVip ? "【熟客免運】" : (totalAmount >= FREE_SHIPPING_THRESHOLD ? "【滿額免運】" : "【一般運費】");
       
-      const shippingTag = isVip ? "【熟客免運】" : (amount >= FREE_SHIPPING_THRESHOLD ? "【滿額免運】" : "【一般運費】");
-     // 修改後：[商品編號] 商品名稱 (規格)
-const itemsDetail = `[${currentActiveProduct.id}] ${currentActiveProduct.name} (${selectedColor || '默認'} / ${selectedSize || 'Free'}) ${shippingTag}`;
+      // 多件品項明細字串組裝
+      const itemsDetail = cart.map(i => `[${i.id}] ${i.name} (${i.color}/${i.size}) x${i.qty}`).join(", ") + " " + shippingTag;
 
       const orderPayload = {
         order_id: randomOrderId,
         phone: phone,
         customer_name: name,
         items: itemsDetail,
-        total_amount: amount,
+       total_amount: totalAmount,
         remitt_last5: last5,
         store_name: store,
         social_account: social,
