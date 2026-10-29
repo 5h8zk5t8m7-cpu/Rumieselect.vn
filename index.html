@@ -163,17 +163,19 @@
 
       <!-- 分類篩選與商品數量 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/80 pb-4">
-        <!-- 分類標籤 -->
+        <!-- 分類標籤 (全部樣式統一圓潤膠囊) -->
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-          <button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white" data-cat="all">全部選品</button>
-          <button onclick="filterCategory('instock')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-amber-50 text-amber-900 border border-amber-300 hover:border-amber-400 flex items-center gap-1" data-cat="instock">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-            ⚡ 現貨專區
+          <button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow-sm flex-shrink-0" data-cat="all">全部選品</button>
+          <button onclick="filterCategory('instock')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-cat="instock">
+            <span>⚡</span> 現貨專區
           </button>
-          <button onclick="filterCategory('tops')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="tops">上衣襯衫</button>
-          <button onclick="filterCategory('bottoms')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="bottoms">洋裝下著</button>
-          <button onclick="filterCategory('outerwear')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="outerwear">外套外搭</button>
-          <button onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="accessories">鞋包配件</button>
+          <button onclick="filterCategory('coord')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-cat="coord">
+            <span>✨</span> 小編幫你搭
+          </button>
+          <button onclick="filterCategory('tops')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="tops">上衣襯衫</button>
+          <button onclick="filterCategory('bottoms')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="bottoms">洋裝下著</button>
+          <button onclick="filterCategory('outerwear')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="outerwear">外套外搭</button>
+          <button onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="accessories">鞋包配件</button>
         </div>
         <div class="text-xs text-stone-500 font-light text-right" id="product-count">
           顯示 0 件選品
@@ -476,15 +478,15 @@
     </div>
   </div>
 
-  <!-- 彈窗 2：線上結帳與匯款回報表單 (Checkout Modal) -->
-  <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+  <!-- 彈窗 2：線上結帳與匯款回報表單 (Checkout Modal - 兩步驟分頁設計) -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
       
-      <!-- 結帳標題 -->
-      <div class="flex items-center justify-between p-4 border-b border-stone-100">
+      <!-- 結帳標題與進度指示 -->
+      <div class="p-4 border-b border-stone-100 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <h3 class="text-sm font-semibold text-stone-900 font-serif">線上填單與匯款回報</h3>
+          <h3 class="text-sm font-semibold text-stone-900 font-serif" id="checkout-modal-title">結帳填單 (1/2) - 核對明細</h3>
         </div>
         <button onclick="closeCheckoutModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded-full hover:bg-stone-100 transition">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -492,120 +494,139 @@
       </div>
 
       <!-- 結帳表單內容區 -->
-      <form id="checkout-form" onsubmit="handleFormSubmit(event)" class="overflow-y-auto p-5 sm:p-6 space-y-5 flex-1 text-xs">
+      <form id="checkout-form" onsubmit="handleFormSubmit(event)" class="overflow-y-auto p-4 sm:p-5 flex-1 text-xs">
         
-        <!-- 訂購商品摘要與免運提示 (支援多件) -->
-        <div class="bg-stone-50 border border-stone-200/80 p-3.5 rounded-xl space-y-2">
-          <div class="flex items-center justify-between text-stone-400 font-medium">
-            <span>訂購品項明細 (<span id="checkout-items-count">0</span> 件)</span>
-          </div>
-          <!-- 多件商品清單 -->
-          <div id="checkout-items-list" class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-            <!-- JS 動態渲染多件清單 -->
-          </div>
-          <!-- 折扣明細 -->
-          <div id="checkout-discount-row" class="hidden flex justify-between items-center pt-1.5 border-t border-stone-200/60 text-emerald-700 text-xs font-medium">
-            <span>💎 金卡會員專屬 95 折：</span>
-            <span id="checkout-discount-amount">-NT$ 0</span>
-          </div>
-          <div class="flex justify-between items-center pt-1.5 border-t border-stone-200/60">
-            <div>
-              <span class="text-stone-500">應匯款商品總額：</span>
-              <span class="text-[10px] text-stone-400 block">（已扣除 95 折優惠）</span>
+        <!-- ★★★ 第一頁 (Step 1)：商品明細與熟客優惠 ★★★ -->
+        <div id="checkout-step-1" class="space-y-4">
+          <!-- 訂購商品摘要與免運提示 (支援多件) -->
+          <div class="bg-stone-50 border border-stone-200/80 p-3.5 rounded-xl space-y-2">
+            <div class="flex items-center justify-between text-stone-400 font-medium text-[11px]">
+              <span>訂購品項明細 (<span id="checkout-items-count">0</span> 件)</span>
             </div>
-            <span class="text-base font-serif font-bold text-stone-900" id="checkout-item-price">NT$ 0</span>
-          </div>
-          <!-- 免運進度徽章 -->
-          <div id="checkout-shipping-badge" class="pt-1 text-[11px] flex items-center justify-between text-stone-600">
-            <!-- JS 動態計算更新 -->
-          </div>
-        </div>
-
-        <!-- 熟客優惠勾選 (限用一次) -->
-        <div class="space-y-1">
-          <label id="vip-checkbox-wrap" class="flex items-start gap-2.5 bg-amber-50/50 border border-amber-200/60 p-3 rounded-xl cursor-pointer hover:bg-amber-50 transition">
-            <input type="checkbox" id="cust-vip" onchange="handleVipCheckboxChange()" class="mt-0.5 rounded text-stone-900 border-stone-300 focus:ring-0">
-            <div class="space-y-0.5 flex-1">
-              <div class="font-semibold text-stone-800 text-xs flex items-center justify-between">
-                <span class="flex items-center gap-1">✨ 我有填寫熟客回饋表單，享有專屬免運優惠！</span>
-                <span id="vip-badge-tag" class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal">限用一次</span>
+            <!-- 多件商品清單 -->
+            <div id="checkout-items-list" class="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+              <!-- JS 動態渲染多件清單 -->
+            </div>
+            <!-- 折扣明細 -->
+            <div id="checkout-discount-row" class="hidden flex justify-between items-center pt-1.5 border-t border-stone-200/60 text-emerald-700 text-xs font-medium">
+              <span>💎 金卡會員專屬 95 折：</span>
+              <span id="checkout-discount-amount">-NT$ 0</span>
+            </div>
+            <div class="flex justify-between items-center pt-1.5 border-t border-stone-200/60">
+              <div>
+                <span class="text-stone-500">應匯款商品總額：</span>
+                <span class="text-[10px] text-stone-400 block">（已扣除 95 折優惠）</span>
               </div>
-              <p class="text-[10px] text-stone-500" id="vip-tip-text">勾選後將直接為您導向【免運專屬賣場】（核款時會對照表單紀錄與歷史使用次數）</p>
+              <span class="text-base font-serif font-bold text-stone-900" id="checkout-item-price">NT$ 0</span>
             </div>
-          </label>
-          <div id="vip-used-warning" class="hidden text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-            <span>⚠️</span>
-            <span>此手機號碼之熟客回饋免運已於歷史訂單使用過囉（每人限用一次），本次依會員等級與滿額門檻計費。</span>
+            <!-- 免運進度徽章 -->
+            <div id="checkout-shipping-badge" class="pt-1 text-[11px] flex items-center justify-between text-stone-600">
+              <!-- JS 動態計算更新 -->
+            </div>
           </div>
-        </div>
 
-        <!-- 匯款帳號資訊卡 -->
-        <div class="bg-amber-50/60 border border-amber-200/80 p-3.5 rounded-xl space-y-2">
-          <div class="flex items-center justify-between text-amber-900 font-medium">
-            <span>Rumie 官方匯款帳號</span>
-            <button type="button" onclick="copyBankAccount()" class="text-[11px] underline hover:text-amber-950 flex items-center gap-1">
-              <i data-lucide="copy" class="w-3 h-3"></i> 複製帳號
+          <!-- 熟客優惠勾選 (限用一次) -->
+          <div class="space-y-1">
+            <label id="vip-checkbox-wrap" class="flex items-start gap-2.5 bg-amber-50/50 border border-amber-200/60 p-3 rounded-xl cursor-pointer hover:bg-amber-50 transition">
+              <input type="checkbox" id="cust-vip" onchange="handleVipCheckboxChange()" class="mt-0.5 rounded text-stone-900 border-stone-300 focus:ring-0">
+              <div class="space-y-0.5 flex-1">
+                <div class="font-semibold text-stone-800 text-xs flex items-center justify-between">
+                  <span class="flex items-center gap-1">✨ 我有填寫熟客回饋表單，享有專屬免運優惠！</span>
+                  <span id="vip-badge-tag" class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal">限用一次</span>
+                </div>
+                <p class="text-[10px] text-stone-500" id="vip-tip-text">勾選後將直接為您導向【免運專屬賣場】（核款時會對照表單紀錄與歷史使用次數）</p>
+              </div>
+            </label>
+            <div id="vip-used-warning" class="hidden text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+              <span>⚠️</span>
+              <span>此手機號碼之熟客回饋免運已於歷史訂單使用過囉（每人限用一次），本次依會員等級與滿額門檻計費。</span>
+            </div>
+          </div>
+
+          <!-- 第一步按鈕：前往下一步 -->
+          <div class="pt-2">
+            <button type="button" onclick="goToCheckoutStep(2)" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
+              <span>前往填寫收件與匯款資訊</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
-          <div class="text-stone-700 space-y-0.5">
-            <p><strong>銀行代碼：</strong> 700 中華郵政</p>
-            <p><strong>帳號號碼：</strong> <span id="bank-acc-text" class="font-mono font-semibold">24414050548389</span></p>
-            <p><strong>戶名：</strong> 邱Ｏ沂</p>
-          </div>
-          <div class="pt-2 border-t border-amber-200/60 space-y-1.5">
-            <div class="p-2.5 rounded-lg bg-amber-100/90 border border-amber-300 text-amber-950 font-medium text-[11px] flex items-center gap-1.5 shadow-xs">
-              <span class="text-sm">💡</span>
-              <span>匯款金額為訂單總價 - 100 元，100 元會作為尾款於取貨時付款～</span>
+        </div>
+
+        <!-- ★★★ 第二頁 (Step 2)：匯款帳號、收件資料與確認送出 ★★★ -->
+        <div id="checkout-step-2" class="space-y-4 hidden">
+          <!-- 匯款帳號資訊卡 -->
+          <div class="bg-amber-50/60 border border-amber-200/80 p-3.5 rounded-xl space-y-2">
+            <div class="flex items-center justify-between text-amber-900 font-medium">
+              <span>Rumie 官方匯款帳號</span>
+              <button type="button" onclick="copyBankAccount()" class="text-[11px] underline hover:text-amber-950 flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i> 複製帳號
+              </button>
             </div>
-            <p class="text-[10px] text-amber-800/80 leading-relaxed">
-              請於填單前後完成轉帳，後續將以您回報的「帳號末五碼」於試算表即時對帳。
-            </p>
+            <div class="text-stone-700 space-y-0.5 text-[11px]">
+              <p><strong>銀行代碼：</strong> 700 中華郵政</p>
+              <p><strong>帳號號碼：</strong> <span id="bank-acc-text" class="font-mono font-semibold">24414050548389</span></p>
+              <p><strong>戶名：</strong> 邱Ｏ沂</p>
+            </div>
+            <div class="pt-2 border-t border-amber-200/60 space-y-1">
+              <div class="p-2 rounded-lg bg-amber-100/90 border border-amber-300 text-amber-950 font-medium text-[11px] flex items-center gap-1.5 shadow-xs">
+                <span>💡</span>
+                <span>匯款金額為訂單總價 - 100 元，100 元會作為尾款於取貨時付款～</span>
+              </div>
+              <p class="text-[10px] text-amber-800/80 leading-relaxed">
+                請於填單前後完成轉帳，後續將以您回報的「帳號末五碼」於試算表即時對帳。
+              </p>
+            </div>
+          </div>
+
+          <!-- 填寫個人與匯款資訊 -->
+          <div class="space-y-2.5">
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="space-y-1">
+                <label class="font-medium text-stone-700">姓名 (同賣貨便姓名) <span class="text-red-500">*</span></label>
+                <input type="text" id="cust-name" placeholder="如：林小姐" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800 text-xs">
+              </div>
+              <div class="space-y-1">
+                <label class="font-medium text-stone-700">手機號碼 (查單帳號) <span class="text-red-500">*</span></label>
+                <input type="tel" id="cust-phone" placeholder="0912345678" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800 text-xs">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="space-y-1">
+                <label class="font-medium text-stone-700">匯款帳號末五碼 <span class="text-red-500">*</span></label>
+                <input type="text" id="cust-last5" maxlength="5" placeholder="後 5 碼數字" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800 text-xs">
+              </div>
+              <div class="space-y-1">
+                <label class="font-medium text-stone-700">LINE / IG 帳號 (緊急聯絡)</label>
+                <input type="text" id="cust-social" placeholder="如：@rumie" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800 text-xs">
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">7-11 賣貨便取件門市 <span class="text-red-500">*</span></label>
+              <input type="text" id="cust-store" placeholder="請填寫 7-11 門市名稱與 6 碼店號 (如：鑫莊門市 192834)" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800 text-xs">
+            </div>
+          </div>
+
+          <!-- 隱私與代購同意勾選 -->
+          <div class="flex items-start gap-2 pt-0.5 text-[11px] text-stone-500">
+            <input type="checkbox" id="terms-agree" class="mt-0.5 rounded border-stone-300">
+            <label for="terms-agree">我已確認匯款資訊與訂購品項無誤，並同意代購連線預購流程規範。</label>
+          </div>
+
+          <!-- 底部操作按鈕：返回上一頁 / 確認送出 -->
+          <div class="pt-1 grid grid-cols-3 gap-2">
+            <button type="button" onclick="goToCheckoutStep(1)" class="col-span-1 bg-stone-100 hover:bg-stone-200 text-stone-700 py-3 rounded-xl font-medium text-xs transition flex items-center justify-center gap-1 border border-stone-200">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              <span>返回</span>
+            </button>
+            <button type="submit" id="submit-order-btn" class="col-span-2 bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>確認並送出訂單</span>
+            </button>
           </div>
         </div>
 
-        <!-- 填寫個人與匯款資訊 -->
-        <div class="space-y-3">
-          <div class="grid grid-cols-2 gap-3">
-            <div class="space-y-1">
-              <label class="font-medium text-stone-700">姓名（請與賣貨便姓名填寫一致小編才能出貨～） <span class="text-red-500">*</span></label>
-              <input type="text" id="cust-name" required placeholder="如：林小姐" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
-            </div>
-            <div class="space-y-1">
-              <label class="font-medium text-stone-700">手機號碼 (查單帳號) <span class="text-red-500">*</span></label>
-              <input type="tel" id="cust-phone" required placeholder="0912345678" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div class="space-y-1">
-              <label class="font-medium text-stone-700">匯款帳號末五碼 <span class="text-red-500">*</span></label>
-              <input type="text" id="cust-last5" required maxlength="5" placeholder="後 5 碼數字" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
-            </div>
-            <div class="space-y-1">
-              <label class="font-medium text-stone-700">LINE / IG 帳號 (緊急聯絡)</label>
-              <input type="text" id="cust-social" placeholder="如：@rumie" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
-            </div>
-          </div>
-
-          <div class="space-y-1">
-            <label class="font-medium text-stone-700">7-11 賣貨便取件門市 <span class="text-red-500">*</span></label>
-            <input type="text" id="cust-store" required placeholder="請填寫 7-11 門市名稱與 6 碼店號 (如：鑫莊門市 192834)" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
-          </div>
-        </div>
-
-        <!-- 隱私與代購同意勾選 -->
-        <div class="flex items-start gap-2 pt-1 text-[11px] text-stone-500">
-          <input type="checkbox" id="terms-agree" required class="mt-0.5 rounded border-stone-300">
-          <label for="terms-agree">我已確認匯款資訊與訂購品項無誤，並同意代購連線預購流程規範。</label>
-        </div>
-
-        <!-- 提交按鈕與狀態 -->
-        <div class="pt-2">
-          <button type="submit" id="submit-order-btn" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition flex items-center justify-center gap-2 shadow-sm">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            確認並送出訂單
-          </button>
-        </div>
       </form>
 
     </div>
@@ -721,10 +742,10 @@
       const cleanPhone = phone.trim().replace(/^'/, '');
       const userOrders = ordersData.filter(o => o.phone && o.phone.trim().replace(/^'/, '') === cleanPhone);
 
-      // 歷史累積消費金額 (加總所有歷史訂單 total_amount)
       // 歷史累積消費金額：只計算已確認匯款成功（進度 >= 步驟 2）的訂單
       const confirmedOrders = userOrders.filter(o => (Number(o.status_step) || 1) >= 2);
       const totalSpent = confirmedOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
+
       // 檢查是否曾經使用過熟客表單免運 (歷史訂單品項標籤有【熟客免運】)
       const hasUsedSurveyFreeShip = userOrders.some(o => 
         o.items && (o.items.includes("【熟客免運】") || o.items.includes("熟客免運") || o.items.includes("熟客回饋"))
@@ -1308,15 +1329,9 @@
       currentCategory = cat;
       document.querySelectorAll('.cat-btn').forEach(btn => {
         const isThis = btn.dataset.cat === cat;
-        if (btn.dataset.cat === 'instock') {
-          btn.className = isThis 
-            ? 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-amber-600 text-white shadow-sm flex items-center gap-1' 
-            : 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-amber-50 text-amber-900 border border-amber-300 hover:border-amber-400 flex items-center gap-1';
-        } else {
-          btn.className = isThis 
-            ? 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow-sm' 
-            : 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400';
-        }
+        btn.className = isThis 
+          ? 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow-sm flex items-center gap-1 flex-shrink-0' 
+          : 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0';
       });
       renderProducts();
     }
@@ -1330,6 +1345,9 @@
         if (currentCategory === 'all') return true;
         if (currentCategory === 'instock') {
           return p.category === 'instock' || (p.tag && p.tag.includes('現貨')) || (p.name && p.name.includes('現貨'));
+        }
+        if (currentCategory === 'coord') {
+          return p.category === 'coord' || (p.tag && (p.tag.includes('搭') || p.tag.includes('套裝'))) || (p.name && (p.name.includes('搭') || p.name.includes('套裝')));
         }
         return p.category === currentCategory;
       });
@@ -1453,7 +1471,27 @@
       document.getElementById('product-modal').classList.add('hidden');
     }
 
-    // 開啟線上結帳彈窗
+    // 結帳兩步驟分頁切換
+    function goToCheckoutStep(step) {
+      const step1 = document.getElementById('checkout-step-1');
+      const step2 = document.getElementById('checkout-step-2');
+      const title = document.getElementById('checkout-modal-title');
+      const modalScroll = document.getElementById('checkout-form');
+
+      if (step === 2) {
+        if (step1) step1.classList.add('hidden');
+        if (step2) step2.classList.remove('hidden');
+        if (title) title.innerText = "結帳填單 (2/2) - 填寫收件與匯款";
+      } else {
+        if (step1) step1.classList.remove('hidden');
+        if (step2) step2.classList.add('hidden');
+        if (title) title.innerText = "結帳填單 (1/2) - 核對明細";
+      }
+
+      if (modalScroll) modalScroll.scrollTop = 0;
+      lucide.createIcons();
+    }
+
     function openCheckoutModal() {
       if (cart.length === 0) {
         alert('購物車目前是空的，請先挑選商品！');
@@ -1525,6 +1563,7 @@
 
       updateCheckoutShippingStatus();
       document.getElementById('checkout-modal').classList.remove('hidden');
+      goToCheckoutStep(1);
       lucide.createIcons();
     }
 
@@ -1542,15 +1581,47 @@
     // 處理填單提交 (整合多品項、會員等級、95折、熟客免運判定)
     function handleFormSubmit(e) {
       e.preventDefault();
-      const submitBtn = document.getElementById('submit-order-btn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = "訂單傳送中...";
 
       const name = document.getElementById('cust-name').value.trim();
       const phone = document.getElementById('cust-phone').value.trim();
       const last5 = document.getElementById('cust-last5').value.trim();
       const social = document.getElementById('cust-social').value.trim();
       const store = document.getElementById('cust-store').value.trim();
+      const termsAgree = document.getElementById('terms-agree') ? document.getElementById('terms-agree').checked : false;
+
+      if (!name) {
+        alert('請填寫收件人姓名！');
+        goToCheckoutStep(2);
+        document.getElementById('cust-name').focus();
+        return;
+      }
+      if (!phone || phone.length < 9) {
+        alert('請填寫正確的手機號碼！');
+        goToCheckoutStep(2);
+        document.getElementById('cust-phone').focus();
+        return;
+      }
+      if (!last5 || last5.length < 5) {
+        alert('請填寫正確的匯款帳號末五碼（5碼數字）！');
+        goToCheckoutStep(2);
+        document.getElementById('cust-last5').focus();
+        return;
+      }
+      if (!store) {
+        alert('請填寫 7-11 賣貨便取件門市！');
+        goToCheckoutStep(2);
+        document.getElementById('cust-store').focus();
+        return;
+      }
+      if (!termsAgree) {
+        alert('請勾選同意代購連線規範！');
+        goToCheckoutStep(2);
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-order-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "訂單傳送中...";
 
       // 計算最新即時會員資格
       const memberStatus = getMemberInfoByPhone(phone);
@@ -1850,6 +1921,8 @@
                 let cat = (rawCat || '').toLowerCase().trim();
                 if (cat.includes('現貨') || cat === 'instock') {
                   cat = 'instock';
+                } else if (cat.includes('搭') || cat.includes('套裝') || cat.includes('穿搭') || cat === 'coord') {
+                  cat = 'coord';
                 } else if (cat.includes('上衣') || cat.includes('襯衫') || cat.includes('背心') || cat === 'tops') {
                   cat = 'tops';
                 } else if (cat.includes('褲') || cat.includes('洋裝') || cat.includes('裙') || cat === 'bottoms') {
