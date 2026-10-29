@@ -701,7 +701,7 @@
     // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
     const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
     const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
-    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzAcvWUJqo2d6ZKLIz_Xvg4Oc_jLGsWq7C6D3OqOsyj1kWWYFgvm7YecxqDDTXBIEvKNw/exec";
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwPdEneNjApuITZMvPVqkca49_aMJm5C9qjVU05JIeX-ZW_ZlLaEN7K5aMV_7aPWFPp0Q/exec";
 
     // ★★★ 7-11 賣貨便賣場網址設定 ★★★
     const SHIP_FREE_URL = "https://myship.7-11.com.tw/general/detail/GM2610137933867";
@@ -722,8 +722,9 @@
       const userOrders = ordersData.filter(o => o.phone && o.phone.trim().replace(/^'/, '') === cleanPhone);
 
       // 歷史累積消費金額 (加總所有歷史訂單 total_amount)
-      const totalSpent = userOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
-
+      // 歷史累積消費金額：只計算已確認匯款成功（進度 >= 步驟 2）的訂單
+      const confirmedOrders = userOrders.filter(o => (Number(o.status_step) || 1) >= 2);
+      const totalSpent = confirmedOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
       // 檢查是否曾經使用過熟客表單免運 (歷史訂單品項標籤有【熟客免運】)
       const hasUsedSurveyFreeShip = userOrders.some(o => 
         o.items && (o.items.includes("【熟客免運】") || o.items.includes("熟客免運") || o.items.includes("熟客回饋"))
