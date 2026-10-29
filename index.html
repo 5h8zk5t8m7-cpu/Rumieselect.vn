@@ -56,4 +56,1692 @@
       <!-- 頁籤與社群按鈕 -->
       <div class="flex items-center gap-2 sm:gap-3">
         <nav class="flex items-center bg-stone-200/60 p-1 rounded-full text-xs font-medium text-stone-600">
-          <button id="tab-shop-btn" onclick="
+          <button id="tab-shop-btn" onclick="switchTab('shop')" class="px-3.5 py-1.5 rounded-full transition-all bg-white text-stone-900 shadow-sm">
+            選品型錄
+          </button>
+          <button id="tab-track-btn" onclick="switchTab('track')" class="px-3.5 py-1.5 rounded-full transition-all hover:text-stone-900">
+            訂單進度
+          </button>
+        </nav>
+
+        <!-- 會員狀態按鈕 -->
+        <button id="header-member-btn" onclick="openMemberModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200/80 text-stone-700 hover:text-stone-950 hover:border-stone-400 transition shadow-sm text-xs font-medium">
+          <i data-lucide="user" class="w-3.5 h-3.5 text-stone-500"></i>
+          <span id="header-member-text">會員登入</span>
+        </button>
+
+        <!-- 頂部購物車按鈕 -->
+        <button onclick="openCartDrawer()" class="relative p-2 rounded-full bg-white border border-stone-200/80 text-stone-700 hover:text-stone-950 hover:border-stone-400 transition shadow-sm flex items-center justify-center">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span id="header-cart-badge" class="absolute -top-1 -right-1 bg-amber-600 text-white font-mono text-[10px] w-4 h-4 rounded-full flex items-center justify-center hidden font-bold">0</span>
+        </button>
+
+        <!-- 社群快速入口 (LINE, IG, Threads) -->
+        <div class="hidden sm:flex items-center gap-2 border-l border-stone-300 pl-3">
+          <a href="https://lin.ee/pbP9jv1i" target="_blank" rel="noopener noreferrer" 
+             class="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 rounded-full transition hover:bg-emerald-100">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span class="font-medium">官方 LINE</span>
+          </a>
+          <a href="https://www.instagram.com/rumie.select.vt?xtok=N3V5YmFzcno2OW42&utm_source=qr" target="_blank" rel="noopener noreferrer" 
+             class="flex items-center gap-1.5 text-xs text-stone-600 hover:text-stone-900 bg-white/80 border border-stone-200 px-2.5 py-1.5 rounded-full transition hover:border-stone-400">
+            <i data-lucide="instagram" class="w-3.5 h-3.5 text-stone-700"></i>
+            <span>IG</span>
+          </a>
+          <a href="https://www.threads.com/@rumie.select.vt?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" 
+             class="flex items-center gap-1.5 text-xs text-stone-600 hover:text-stone-900 bg-white/80 border border-stone-200 px-2.5 py-1.5 rounded-full transition hover:border-stone-400">
+            <svg class="w-3.5 h-3.5 fill-current text-stone-700" viewBox="0 0 192 192">
+              <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6145 63.5383 90.6409 61.1685 97.1627 61.1685C110.1 61.1685 119.537 69.3496 121.282 82.2037C114.167 80.4905 106.31 79.7997 97.7777 80.148C74.6198 81.0858 59.9575 92.4842 61.0829 108.647C62.0673 122.795 73.8409 131.787 88.7501 131.787C105.748 131.787 117.842 121.841 123.003 108.43C127.355 116.349 133.916 121.731 143.084 121.731C154.673 121.731 163.504 113.626 163.504 99.3093C163.504 63.266 135.083 31.5 97.222 31.5C59.9575 31.5 28.5 61.4727 28.5 100.082C28.5 138.835 59.9575 168.808 97.222 168.808C117.067 168.808 134.619 160.672 146.425 146.852L133.684 135.498C124.639 146.126 111.954 152.384 97.222 152.384C69.0437 152.384 45.4124 128.847 45.4124 100.082C45.4124 71.4608 69.0437 47.9242 97.222 47.9242C126.837 47.9242 147.08 72.822 147.08 99.3093C147.08 105.158 143.725 108.204 139.778 108.204C134.82 108.204 130.655 103.528 127.702 96.0689C133.308 93.1818 137.986 90.761 141.537 88.9883ZM98.3905 115.363C88.0264 115.363 80.0801 109.919 79.5293 102.008C78.9619 93.8587 86.6433 87.7289 98.4069 87.2536C105.41 86.9712 112.001 87.7077 118.067 89.4449C115.658 105.777 107.568 115.363 98.3905 115.363Z"/>
+            </svg>
+            <span>Threads</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+    
+    <!-- 頁籤 1：選品型錄 (Shop Tab) -->
+    <section id="view-shop" class="space-y-8">
+      
+      <!-- 品牌精神橫幅 -->
+      <div class="relative bg-white border border-stone-200/80 rounded-2xl p-6 sm:p-8 overflow-hidden shadow-sm">
+        <div class="max-w-xl relative z-10 space-y-3">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-stone-100 text-stone-600 text-xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            本期越南連線即時更新中
+          </div>
+          
+          <p class="text-sm text-stone-600 leading-relaxed">
+            全館選品皆為越南門市採購正品，全店皆為預購另有現貨專區不定時刊登，預購商品14-21個工作天到貨，現貨專區下單後3日內寄出，選好商品後，點擊可直接線上填單與回報匯款，匯款金額為訂單總價-100元，100元會做為賣貨便尾款於取貨時收取，後續包裹一律經由 7-11 賣貨便寄出。
+          </p>
+          <div class="pt-2 flex flex-wrap items-center gap-2">
+            <a href="https://lin.ee/pbP9jv1i" target="_blank" 
+               class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-800 bg-emerald-100/70 hover:bg-emerald-200/70 px-3 py-1.5 rounded-lg transition">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> 加入官方 LINE 詢問
+            </a>
+            <a href="https://www.instagram.com/rumie.select.vt?xtok=N3V5YmFzcno2OW42&utm_source=qr" target="_blank" 
+               class="inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg transition">
+              <i data-lucide="instagram" class="w-3.5 h-3.5"></i> Instagram
+            </a>
+            <a href="https://www.threads.com/@rumie.select.vt?igshid=NTc4MTIwNjQ2YQ==" target="_blank" 
+               class="inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg transition">
+              <span class="font-bold">@</span> Threads
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分類篩選與商品數量 -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/80 pb-4">
+        <!-- 分類標籤 -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+          <button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white" data-cat="all">全部選品</button>
+          <button onclick="filterCategory('instock')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-amber-50 text-amber-900 border border-amber-300 hover:border-amber-400 flex items-center gap-1" data-cat="instock">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+            ⚡ 現貨專區
+          </button>
+          <button onclick="filterCategory('tops')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="tops">上衣襯衫</button>
+          <button onclick="filterCategory('bottoms')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="bottoms">洋裝下著</button>
+          <button onclick="filterCategory('outerwear')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="outerwear">外套外搭</button>
+          <button onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400" data-cat="accessories">鞋包配件</button>
+        </div>
+        <div class="text-xs text-stone-500 font-light text-right" id="product-count">
+          顯示 0 件選品
+        </div>
+      </div>
+
+      <!-- 商品網格清單 -->
+      <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- JS 動態渲染或空狀態呈現 -->
+      </div>
+    </section>
+
+    <!-- 頁籤 2：訂單進度追蹤 (Tracking Tab) -->
+    <section id="view-track" class="max-w-2xl mx-auto space-y-6 hidden">
+      <div class="text-center space-y-2 mb-8">
+        <h2 class="text-2xl font-serif font-bold text-stone-900">連線包裹進度查詢</h2>
+        <p class="text-xs sm:text-sm text-stone-500">輸入下單時填寫之「手機號碼」或「訂單編號（如 RM-901）」即時查詢貨況</p>
+      </div>
+
+      <!-- 查詢輸入框 -->
+      <div class="bg-white p-2 rounded-2xl border border-stone-200 shadow-sm flex items-center gap-2">
+        <div class="pl-3 text-stone-400">
+          <i data-lucide="search" class="w-5 h-5"></i>
+        </div>
+        <input type="text" id="track-input" placeholder="請輸入手機號碼 (如 0912345678) 或訂單編號" 
+               class="flex-1 bg-transparent border-0 text-sm focus:outline-none text-stone-800 placeholder-stone-400 py-2">
+        <button onclick="handleSearchOrder()" class="bg-stone-900 text-white px-5 py-2.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition">
+          查詢進度
+        </button>
+      </div>
+
+      <!-- 查詢結果區塊 (動態呈現) -->
+      <div id="tracking-result" class="space-y-4">
+        <!-- 初始無查詢時提示 -->
+        <div class="p-8 text-center bg-white/60 border border-dashed border-stone-200 rounded-2xl text-stone-400 text-xs">
+          請於上方輸入資料查詢您的採購進度與賣貨便單號
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 彈窗 1：商品詳情與規格選取 (Product Modal) -->
+  <div id="product-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- 彈窗頂部關閉 -->
+      <div class="flex items-center justify-between p-4 border-b border-stone-100">
+        <span class="text-xs uppercase tracking-wider text-stone-400 font-mono" id="modal-product-id">VN000</span>
+        <button onclick="closeProductModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded-full hover:bg-stone-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 彈窗內容可滾動區 -->
+      <div class="overflow-y-auto p-5 sm:p-6 space-y-6 flex-1">
+        
+        <!-- 圖片展示 -->
+        <div class="space-y-2">
+          <div class="aspect-[3/4] bg-stone-100 rounded-xl overflow-hidden">
+            <img id="modal-main-image" src="" alt="商品預覽" class="w-full h-full object-cover">
+          </div>
+          <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto py-1"></div>
+        </div>
+
+        <!-- 基本資料 -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span id="modal-tag" class="text-[10px] tracking-wider px-2 py-0.5 rounded-full bg-stone-100 text-stone-700 font-medium">連線中</span>
+            <span id="modal-cat" class="text-[10px] text-stone-400 uppercase tracking-widest">TOPS</span>
+          </div>
+          <h3 id="modal-name" class="text-lg sm:text-xl font-medium text-stone-900">商品名稱</h3>
+          <div class="text-xl font-serif font-bold text-stone-900" id="modal-price">NT$ 0</div>
+        </div>
+
+        <!-- 規格選擇：顏色 -->
+        <div class="space-y-2" id="color-selection-wrap">
+          <label class="text-xs font-semibold text-stone-700 tracking-wider">選擇顏色</label>
+          <div id="modal-colors" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- 規格選擇：尺寸 -->
+        <div class="space-y-2" id="size-selection-wrap">
+          <label class="text-xs font-semibold text-stone-700 tracking-wider">選擇尺寸</label>
+          <div id="modal-sizes" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- 商品描述與平量 -->
+        <div class="space-y-2 border-t border-stone-100 pt-4">
+          <label class="text-xs font-semibold text-stone-700 tracking-wider">商品介紹與平量規格</label>
+          <p id="modal-desc" class="text-xs text-stone-600 leading-relaxed whitespace-pre-line bg-stone-50 p-3 rounded-xl border border-stone-100"></p>
+        </div>
+      </div>
+
+      <!-- 彈窗底部操作列：組裝下單與直接結帳按鈕 -->
+      <div class="p-4 bg-stone-50 border-t border-stone-100 space-y-2">
+        <div class="flex items-center justify-between text-xs text-stone-500">
+          <span>已選規格：<strong id="selected-spec-text" class="text-stone-800">請選取規格</strong></span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="addToCartCurrent()" class="w-full bg-stone-100 hover:bg-stone-200 text-stone-800 py-2.5 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 border border-stone-300">
+            <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-stone-700"></i>
+            加入購物車
+          </button>
+          <button type="button" onclick="buyNowCurrent()" class="w-full bg-stone-900 text-white py-2.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+            立即填單結帳
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 懸浮購物車圓形按鈕 (右下角) -->
+  <button id="floating-cart-btn" onclick="openCartDrawer()" class="fixed bottom-6 right-6 z-40 bg-stone-900 text-white p-3.5 rounded-full shadow-2xl hover:scale-105 transition flex items-center justify-center border-2 border-stone-100">
+    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+    <span id="floating-cart-badge" class="absolute -top-1 -right-1 bg-amber-600 text-white font-mono text-[10px] w-5 h-5 rounded-full flex items-center justify-center hidden font-bold">0</span>
+  </button>
+
+  <!-- 購物車側邊抽屜 (Cart Drawer) -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex justify-end transition-opacity">
+    <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+      <div class="flex items-center justify-between p-4 border-b border-stone-100">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-stone-800"></i>
+          <h3 class="font-serif font-bold text-stone-900 text-base">購物清單</h3>
+          <span id="cart-total-qty" class="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-mono">0 件</span>
+        </div>
+        <button onclick="closeCartDrawer()" class="p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 免運進度提示 -->
+      <div class="bg-amber-50/70 border-b border-amber-100 p-3 text-xs" id="cart-free-ship-box"></div>
+
+      <!-- 購物車清單列表 -->
+      <div id="cart-items-wrap" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+
+      <!-- 底部結帳列 -->
+      <div class="p-4 bg-stone-50 border-t border-stone-100 space-y-3">
+        <div class="flex items-center justify-between text-xs text-stone-500">
+          <span>商品總計</span>
+          <span id="cart-subtotal" class="text-base font-serif font-bold text-stone-900">NT$ 0</span>
+        </div>
+        <button onclick="proceedToCheckoutFromCart()" id="cart-checkout-btn" class="w-full bg-stone-900 text-white py-3.5 rounded-xl text-xs font-medium hover:bg-stone-800 transition flex items-center justify-center gap-2 shadow-sm">
+          <span>前往結帳匯款</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 彈窗：會員中心 / 手機登入 (Member Modal) -->
+  <div id="member-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- 頂部標題與關閉 -->
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-stone-100 flex items-center justify-center text-stone-700">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-serif font-bold text-stone-900 text-base" id="member-modal-title">Rumie 會員中心</h3>
+        </div>
+        <button onclick="closeMemberModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded-full hover:bg-stone-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 未登入畫面：輸入手機快速登入 -->
+      <div id="member-logged-out-view" class="space-y-4 text-xs">
+        <p class="text-stone-500 leading-relaxed">
+          輸入下單時使用的手機號碼，系統將自動同步您的歷史消費紀錄並判定會員等級與專屬優惠！
+        </p>
+        <div class="space-y-1.5">
+          <label class="font-medium text-stone-700">手機號碼</label>
+          <input type="tel" id="member-phone-input" placeholder="0912345678" maxlength="10" 
+                 class="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-stone-900 text-sm font-mono text-stone-900">
+        </div>
+        <button onclick="handleMemberLogin()" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition shadow-sm">
+          快速登入 / 查詢會員等級
+        </button>
+
+        <!-- 會員制度權益說明小卡 -->
+        <div class="bg-stone-50 rounded-xl p-3 border border-stone-100 space-y-2 text-[11px] text-stone-600">
+          <div class="font-semibold text-stone-800 flex items-center gap-1">
+            <i data-lucide="award" class="w-3.5 h-3.5 text-amber-600"></i>
+            Rumie 會員專屬禮遇
+          </div>
+          <div class="space-y-1 text-stone-500">
+            <p>🌱 <strong>一般顧客</strong>：單筆滿 NT$ 2,000 享免運</p>
+            <p>✨ <strong>熟客回饋表單</strong>：免運優惠限定使用一次</p>
+            <p>🌟 <strong>銀卡熟客（累計滿 $5,000）</strong>：享每單不限金額免運</p>
+            <p>💎 <strong>金卡會員（累計滿 $8,000）</strong>：享每單免運 + 全單 95 折</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 已登入畫面：顯示會員卡片與累計消費 -->
+      <div id="member-logged-in-view" class="space-y-4 text-xs hidden">
+        <!-- 會員專屬卡片 -->
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white shadow-md space-y-3 relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] tracking-widest uppercase font-mono text-stone-300">Rumie Select Member</span>
+            <span id="member-card-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500 text-white shadow-sm">
+              金卡會員
+            </span>
+          </div>
+          <div>
+            <div class="text-sm font-semibold" id="member-card-name">林小姐</div>
+            <div class="text-[11px] font-mono text-stone-400" id="member-card-phone">0912-345-678</div>
+          </div>
+          <div class="pt-1 border-t border-white/10 flex justify-between items-end">
+            <div>
+              <div class="text-[10px] text-stone-400">歷史累積消費</div>
+              <div class="text-base font-serif font-bold text-amber-300" id="member-card-total">NT$ 0</div>
+            </div>
+            <div class="text-right text-[10px] text-stone-300" id="member-card-perks">
+              每單免運 · 全單 95 折
+            </div>
+          </div>
+        </div>
+
+        <!-- 升級進度提醒 -->
+        <div class="bg-amber-50/70 border border-amber-200/80 p-3 rounded-xl space-y-1">
+          <div class="font-medium text-amber-900 flex items-center justify-between">
+            <span>會員權益狀態</span>
+            <span id="member-upgrade-status" class="text-[10px] text-amber-700"></span>
+          </div>
+          <p id="member-upgrade-tip" class="text-[11px] text-amber-800/80 leading-relaxed"></p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button onclick="logoutMember()" class="w-full bg-stone-100 hover:bg-stone-200 text-stone-700 py-2.5 rounded-xl text-xs font-medium transition">
+            切換 / 登出帳號
+          </button>
+          <button onclick="closeMemberModal()" class="w-full bg-stone-900 hover:bg-stone-800 text-white py-2.5 rounded-xl text-xs font-medium transition">
+            確定
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 彈窗 2：線上結帳與匯款回報表單 (Checkout Modal) -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- 結帳標題 -->
+      <div class="flex items-center justify-between p-4 border-b border-stone-100">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <h3 class="text-sm font-semibold text-stone-900 font-serif">線上填單與匯款回報</h3>
+        </div>
+        <button onclick="closeCheckoutModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded-full hover:bg-stone-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 結帳表單內容區 -->
+      <form id="checkout-form" onsubmit="handleFormSubmit(event)" class="overflow-y-auto p-5 sm:p-6 space-y-5 flex-1 text-xs">
+        
+        <!-- 訂購商品摘要與免運提示 (支援多件) -->
+        <div class="bg-stone-50 border border-stone-200/80 p-3.5 rounded-xl space-y-2">
+          <div class="flex items-center justify-between text-stone-400 font-medium">
+            <span>訂購品項明細 (<span id="checkout-items-count">0</span> 件)</span>
+          </div>
+          <!-- 多件商品清單 -->
+          <div id="checkout-items-list" class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+            <!-- JS 動態渲染多件清單 -->
+          </div>
+          <!-- 折扣明細 -->
+          <div id="checkout-discount-row" class="hidden flex justify-between items-center pt-1.5 border-t border-stone-200/60 text-emerald-700 text-xs font-medium">
+            <span>💎 金卡會員專屬 95 折：</span>
+            <span id="checkout-discount-amount">-NT$ 0</span>
+          </div>
+          <div class="flex justify-between items-center pt-1.5 border-t border-stone-200/60">
+            <div>
+              <span class="text-stone-500">應匯款商品總額：</span>
+              <span class="text-[10px] text-stone-400 block">（已扣除 95 折優惠）</span>
+            </div>
+            <span class="text-base font-serif font-bold text-stone-900" id="checkout-item-price">NT$ 0</span>
+          </div>
+          <!-- 免運進度徽章 -->
+          <div id="checkout-shipping-badge" class="pt-1 text-[11px] flex items-center justify-between text-stone-600">
+            <!-- JS 動態計算更新 -->
+          </div>
+        </div>
+
+        <!-- 熟客優惠勾選 (限用一次) -->
+        <div class="space-y-1">
+          <label id="vip-checkbox-wrap" class="flex items-start gap-2.5 bg-amber-50/50 border border-amber-200/60 p-3 rounded-xl cursor-pointer hover:bg-amber-50 transition">
+            <input type="checkbox" id="cust-vip" onchange="handleVipCheckboxChange()" class="mt-0.5 rounded text-stone-900 border-stone-300 focus:ring-0">
+            <div class="space-y-0.5 flex-1">
+              <div class="font-semibold text-stone-800 text-xs flex items-center justify-between">
+                <span class="flex items-center gap-1">✨ 我有填寫熟客回饋表單，享有專屬免運優惠！</span>
+                <span id="vip-badge-tag" class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal">限用一次</span>
+              </div>
+              <p class="text-[10px] text-stone-500" id="vip-tip-text">勾選後將直接為您導向【免運專屬賣場】（核款時會對照表單紀錄與歷史使用次數）</p>
+            </div>
+          </label>
+          <div id="vip-used-warning" class="hidden text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+            <span>⚠️</span>
+            <span>此手機號碼之熟客回饋免運已於歷史訂單使用過囉（每人限用一次），本次依會員等級與滿額門檻計費。</span>
+          </div>
+        </div>
+
+        <!-- 匯款帳號資訊卡 -->
+        <div class="bg-amber-50/60 border border-amber-200/80 p-3.5 rounded-xl space-y-2">
+          <div class="flex items-center justify-between text-amber-900 font-medium">
+            <span>Rumie 官方匯款帳號</span>
+            <button type="button" onclick="copyBankAccount()" class="text-[11px] underline hover:text-amber-950 flex items-center gap-1">
+              <i data-lucide="copy" class="w-3 h-3"></i> 複製帳號
+            </button>
+          </div>
+          <div class="text-stone-700 space-y-0.5">
+            <p><strong>銀行代碼：</strong> 700 中華郵政</p>
+            <p><strong>帳號號碼：</strong> <span id="bank-acc-text" class="font-mono font-semibold">24414050548389</span></p>
+            <p><strong>戶名：</strong> 邱Ｏ沂</p>
+          </div>
+          <div class="pt-2 border-t border-amber-200/60 space-y-1.5">
+            <div class="p-2.5 rounded-lg bg-amber-100/90 border border-amber-300 text-amber-950 font-medium text-[11px] flex items-center gap-1.5 shadow-xs">
+              <span class="text-sm">💡</span>
+              <span>匯款金額為訂單總價 - 100 元，100 元會作為尾款於取貨時付款～</span>
+            </div>
+            <p class="text-[10px] text-amber-800/80 leading-relaxed">
+              請於填單前後完成轉帳，後續將以您回報的「帳號末五碼」於試算表即時對帳。
+            </p>
+          </div>
+        </div>
+
+        <!-- 填寫個人與匯款資訊 -->
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">姓名（請與賣貨便姓名填寫一致小編才能出貨～） <span class="text-red-500">*</span></label>
+              <input type="text" id="cust-name" required placeholder="如：林小姐" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">手機號碼 (查單帳號) <span class="text-red-500">*</span></label>
+              <input type="tel" id="cust-phone" required placeholder="0912345678" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">匯款帳號末五碼 <span class="text-red-500">*</span></label>
+              <input type="text" id="cust-last5" required maxlength="5" placeholder="後 5 碼數字" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+            <div class="space-y-1">
+              <label class="font-medium text-stone-700">LINE / IG 帳號 (緊急聯絡)</label>
+              <input type="text" id="cust-social" placeholder="如：@rumie" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="font-medium text-stone-700">7-11 賣貨便取件門市 <span class="text-red-500">*</span></label>
+            <input type="text" id="cust-store" required placeholder="請填寫 7-11 門市名稱與 6 碼店號 (如：鑫莊門市 192834)" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800">
+          </div>
+        </div>
+
+        <!-- 隱私與代購同意勾選 -->
+        <div class="flex items-start gap-2 pt-1 text-[11px] text-stone-500">
+          <input type="checkbox" id="terms-agree" required class="mt-0.5 rounded border-stone-300">
+          <label for="terms-agree">我已確認匯款資訊與訂購品項無誤，並同意代購連線預購流程規範。</label>
+        </div>
+
+        <!-- 提交按鈕與狀態 -->
+        <div class="pt-2">
+          <button type="submit" id="submit-order-btn" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            確認並送出訂單
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- 彈窗 3：下單成功與直達賣貨便彈窗 (Order Success Modal) -->
+  <div id="order-success-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150 text-center">
+      
+      <!-- 頂部成功圖示 -->
+      <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+        <i data-lucide="check" class="w-7 h-7 stroke-[2.5]"></i>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="text-xl font-serif font-bold text-stone-900">匯款回報已收到！</h3>
+        <p class="text-xs text-stone-500 font-mono tracking-wider">訂單編號：<span id="succ-order-id" class="font-bold text-stone-800">RM-000</span></p>
+      </div>
+
+      <!-- 運費與賣場狀態標籤 -->
+      <div class="p-4 rounded-xl border space-y-2 text-left" id="shipping-status-box">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-stone-500">運費方案判定：</span>
+          <span id="succ-shipping-badge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+            免運專屬賣場
+          </span>
+        </div>
+        <p id="succ-shipping-desc" class="text-xs text-stone-600 leading-relaxed">
+          符合免運資格，請點擊下方按鈕前往 7-11 賣貨便選擇取件超商門市！
+        </p>
+      </div>
+
+      <!-- 賣貨便直達按鈕 -->
+      <div class="space-y-2 pt-1">
+        <a id="succ-myship-btn" href="#" target="_blank" 
+           class="w-full bg-[#E85E14] hover:bg-[#D44E08] text-white py-3.5 rounded-xl font-medium text-sm transition flex items-center justify-center gap-2 shadow-md">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          前往 7-11 賣貨便建立門市訂單
+        </a>
+        <p class="text-[11px] text-stone-400">
+          💡 請於賣貨便結帳時，備註您的訂單編號 <strong id="succ-order-memo" class="text-stone-700">RM-000</strong>
+        </p>
+      </div>
+
+      <!-- 底部關閉/查單 -->
+      <div class="pt-2 border-t border-stone-100">
+        <button onclick="closeSuccessAndGoTrack()" class="w-full text-xs text-stone-500 hover:text-stone-800 py-2 transition font-medium">
+          完成，前往查看訂單進度 →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 頁尾 Footer -->
+  <footer class="border-t border-stone-200/80 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+      <div class="flex flex-col items-center sm:items-start gap-1">
+        <div class="font-serif font-bold text-stone-800 tracking-wider text-sm">Rumie Vietnam Select</div>
+        <p>© 2026 Rumie. All rights reserved. 越南設計小眾品牌代購</p>
+      </div>
+
+      <!-- 頁尾社群與客服連結列 -->
+      <div class="flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
+        <a href="https://lin.ee/pbP9jv1i" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 transition font-medium">
+          <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+          <span>LINE 客服</span>
+        </a>
+        <span class="text-stone-300 hidden sm:inline">|</span>
+        <a href="https://www.instagram.com/rumie.select.vt?xtok=N3V5YmFzcno2OW42&utm_source=qr" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 transition">
+          <i data-lucide="instagram" class="w-4 h-4 text-stone-700"></i>
+          <span>@rumie.select.vt</span>
+        </a>
+        <span class="text-stone-300 hidden sm:inline">|</span>
+        <a href="https://www.threads.com/@rumie.select.vt?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 transition">
+          <svg class="w-4 h-4 fill-current text-stone-700" viewBox="0 0 192 192">
+            <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6145 63.5383 90.6409 61.1685 97.1627 61.1685C110.1 61.1685 119.537 69.3496 121.282 82.2037C114.167 80.4905 106.31 79.7997 97.7777 80.148C74.6198 81.0858 59.9575 92.4842 61.0829 108.647C62.0673 122.795 73.8409 131.787 88.7501 131.787C105.748 131.787 117.842 121.841 123.003 108.43C127.355 116.349 133.916 121.731 143.084 121.731C154.673 121.731 163.504 113.626 163.504 99.3093C163.504 63.266 135.083 31.5 97.222 31.5C59.9575 31.5 28.5 61.4727 28.5 100.082C28.5 138.835 59.9575 168.808 97.222 168.808C117.067 168.808 134.619 160.672 146.425 146.852L133.684 135.498C124.639 146.126 111.954 152.384 97.222 152.384C69.0437 152.384 45.4124 128.847 45.4124 100.082C45.4124 71.4608 69.0437 47.9242 97.222 47.9242C126.837 47.9242 147.08 72.822 147.08 99.3093C147.08 105.158 143.725 108.204 139.778 108.204C134.82 108.204 130.655 103.528 127.702 96.0689C133.308 93.1818 137.986 90.761 141.537 88.9883ZM98.3905 115.363C88.0264 115.363 80.0801 109.919 79.5293 102.008C78.9619 93.8587 86.6433 87.7289 98.4069 87.2536C105.41 86.9712 112.001 87.7077 118.067 89.4449C115.658 105.777 107.568 115.363 98.3905 115.363Z"/>
+            </svg>
+            <span>Threads</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 核心資料與互動腳本 -->
+  <script>
+    lucide.createIcons();
+
+    // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
+    const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
+    const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzWAoVPCeyHwf_8iJc9am9nmKjl-qbaqJM9DowgPkrxFFhtfHVw0qKJT7_n5A8jzmBwZA/exec";
+
+    // ★★★ 7-11 賣貨便賣場網址設定 ★★★
+    const SHIP_FREE_URL = "https://myship.7-11.com.tw/general/detail/GM2610137933867";
+    const SHIP_NORMAL_URL = "https://myship.7-11.com.tw/general/detail/GM2609015649361";
+    
+    // ★★★ 會員等級門檻與優惠規則設定 ★★★
+    const FREE_SHIPPING_THRESHOLD = 2000; // 單筆滿 2,000 免運
+    const SILVER_MEMBER_THRESHOLD = 5000; // 歷史累積滿 5,000：每單免運
+    const VIP_MEMBER_THRESHOLD = 8000;    // 歷史累積滿 8,000：每單免運 + 全單 95 折
+
+    let currentOrderPhone = "";
+    let currentMember = null; // 當前登入之會員資訊
+
+    // 根據手機號碼計算會員資格與歷史消費
+    function getMemberInfoByPhone(phone) {
+      if (!phone) return null;
+      const cleanPhone = phone.trim().replace(/^'/, '');
+      const userOrders = ordersData.filter(o => o.phone && o.phone.trim().replace(/^'/, '') === cleanPhone);
+
+      // 歷史累積消費金額 (加總所有歷史訂單 total_amount)
+      const totalSpent = userOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0);
+
+      // 檢查是否曾經使用過熟客表單免運 (歷史訂單品項標籤有【熟客免運】)
+      const hasUsedSurveyFreeShip = userOrders.some(o => 
+        o.items && (o.items.includes("【熟客免運】") || o.items.includes("熟客免運") || o.items.includes("熟客回饋"))
+      );
+
+      // 最新姓名（若有）
+      const latestName = userOrders.length > 0 ? userOrders[0].customer_name : "貴賓顧客";
+
+      let level = 'normal'; // normal, silver, vip
+      let levelTitle = '🌱 一般顧客';
+      let discountRate = 1; // 1 = 無折扣, 0.95 = 95折
+
+      if (totalSpent >= VIP_MEMBER_THRESHOLD) {
+        level = 'vip';
+        levelTitle = '💎 金卡會員';
+        discountRate = 0.95;
+      } else if (totalSpent >= SILVER_MEMBER_THRESHOLD) {
+        level = 'silver';
+        levelTitle = '🌟 銀卡熟客';
+        discountRate = 1;
+      }
+
+      return {
+        phone: cleanPhone,
+        name: latestName,
+        totalSpent: totalSpent,
+        orderCount: userOrders.length,
+        hasUsedSurveyFreeShip: hasUsedSurveyFreeShip,
+        level: level,
+        levelTitle: levelTitle,
+        discountRate: discountRate
+      };
+    }
+
+    // 初始化會員登入狀態 (從 localStorage 自動讀取)
+    function initMemberAuth() {
+      const savedPhone = localStorage.getItem('rumie_member_phone');
+      if (savedPhone) {
+        currentMember = getMemberInfoByPhone(savedPhone);
+        if (!currentMember) {
+          currentMember = {
+            phone: savedPhone,
+            name: "貴賓顧客",
+            totalSpent: 0,
+            orderCount: 0,
+            hasUsedSurveyFreeShip: false,
+            level: 'normal',
+            levelTitle: '🌱 一般顧客',
+            discountRate: 1
+          };
+        }
+      }
+      updateHeaderMemberUI();
+    }
+
+    // 更新頂部導覽列會員按鈕顯示
+    function updateHeaderMemberUI() {
+      const btnText = document.getElementById('header-member-text');
+      const btn = document.getElementById('header-member-btn');
+      if (!btnText || !btn) return;
+
+      if (currentMember) {
+        if (currentMember.level === 'vip') {
+          btnText.innerHTML = `<span class="text-amber-700 font-bold">💎 金卡 ${currentMember.name || ''}</span>`;
+          btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-stone-800 hover:border-amber-500 transition shadow-xs text-xs font-medium";
+        } else if (currentMember.level === 'silver') {
+          btnText.innerHTML = `<span class="text-stone-800 font-semibold">🌟 熟客 ${currentMember.name || ''}</span>`;
+          btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 border border-stone-300 text-stone-800 transition shadow-xs text-xs font-medium";
+        } else {
+          btnText.innerText = currentMember.name ? `👤 ${currentMember.name}` : `👤 會員專區`;
+          btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200/80 text-stone-700 hover:border-stone-400 transition shadow-sm text-xs font-medium";
+        }
+      } else {
+        btnText.innerText = "會員登入";
+        btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200/80 text-stone-700 hover:border-stone-400 transition shadow-sm text-xs font-medium";
+      }
+    }
+
+    // 開啟會員彈窗
+    function openMemberModal() {
+      const modal = document.getElementById('member-modal');
+      const loggedOutView = document.getElementById('member-logged-out-view');
+      const loggedInView = document.getElementById('member-logged-in-view');
+
+      if (currentMember) {
+        loggedOutView.classList.add('hidden');
+        loggedInView.classList.remove('hidden');
+
+        document.getElementById('member-card-badge').innerText = currentMember.levelTitle;
+        document.getElementById('member-card-name').innerText = currentMember.name || "貴賓顧客";
+        document.getElementById('member-card-phone').innerText = currentMember.phone;
+        document.getElementById('member-card-total').innerText = `NT$ ${currentMember.totalSpent.toLocaleString()}`;
+
+        const perkEl = document.getElementById('member-card-perks');
+        const tipEl = document.getElementById('member-upgrade-tip');
+        const statusEl = document.getElementById('member-upgrade-status');
+
+        if (currentMember.level === 'vip') {
+          perkEl.innerText = "每單免運 · 全單 95 折";
+          statusEl.innerText = "金卡會員";
+          tipEl.innerText = "您已是 Rumie 金卡會員，全店所有訂單不限金額一律享有【每單免運費】與【全單結帳 95 折優惠】！";
+        } else if (currentMember.level === 'silver') {
+          perkEl.innerText = "每單免運費";
+          const diff = VIP_MEMBER_THRESHOLD - currentMember.totalSpent;
+          statusEl.innerText = "🌟 銀卡熟客";
+          tipEl.innerHTML = `已享【每單不限金額免運】！再累積消費 <strong>NT$ ${diff.toLocaleString()}</strong> 即可晉升【💎 金卡會員】，再享每單 95 折！`;
+        } else {
+          perkEl.innerText = "滿額 NT$ 2,000 免運";
+          const diffSilver = SILVER_MEMBER_THRESHOLD - currentMember.totalSpent;
+          statusEl.innerText = "🌱 一般會員";
+          tipEl.innerHTML = `歷史累積訂購 ${currentMember.orderCount} 筆。距離晉升【🌟 銀卡熟客（每單免運）】還差 <strong>NT$ ${diffSilver.toLocaleString()}</strong>！`;
+        }
+      } else {
+        loggedOutView.classList.remove('hidden');
+        loggedInView.classList.add('hidden');
+      }
+
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeMemberModal() {
+      const modal = document.getElementById('member-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // 處理手機號碼登入
+    function handleMemberLogin() {
+      const phoneInput = document.getElementById('member-phone-input').value.trim();
+      if (!phoneInput || phoneInput.length < 9) {
+        alert('請輸入有效的手機號碼！');
+        return;
+      }
+
+      currentMember = getMemberInfoByPhone(phoneInput);
+      if (!currentMember) {
+        currentMember = {
+          phone: phoneInput,
+          name: "新朋友",
+          totalSpent: 0,
+          orderCount: 0,
+          hasUsedSurveyFreeShip: false,
+          level: 'normal',
+          levelTitle: '🌱 一般顧客',
+          discountRate: 1
+        };
+      }
+
+      localStorage.setItem('rumie_member_phone', phoneInput);
+      updateHeaderMemberUI();
+      openMemberModal();
+    }
+
+    // 登出帳號
+    function logoutMember() {
+      currentMember = null;
+      localStorage.removeItem('rumie_member_phone');
+      updateHeaderMemberUI();
+      openMemberModal();
+    }
+
+    // ★★★ 購物車系統 (Cart System) ★★★
+    let cart = [];
+
+    // 加入購物車 (當前彈窗商品)
+    function addToCartCurrent() {
+      if (!currentActiveProduct) return;
+      
+      const item = {
+        id: currentActiveProduct.id,
+        name: currentActiveProduct.name,
+        price: Number(currentActiveProduct.price) || 0,
+        color: selectedColor || '默認',
+        size: selectedSize || 'Free',
+        image: (currentActiveProduct.images && currentActiveProduct.images.length > 0) 
+                 ? currentActiveProduct.images[0] 
+                 : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300',
+        qty: 1
+      };
+
+      // 檢查是否已有相同規格
+      const existIndex = cart.findIndex(c => c.id === item.id && c.color === item.color && c.size === item.size);
+      if (existIndex > -1) {
+        cart[existIndex].qty += 1;
+      } else {
+        cart.push(item);
+      }
+
+      updateCartBadge();
+      closeProductModal();
+      openCartDrawer();
+    }
+
+    // 立即購買當前商品
+    function buyNowCurrent() {
+      if (!currentActiveProduct) return;
+      addToCartCurrent();
+      closeCartDrawer();
+      openCheckoutModal();
+    }
+
+    // 更新購物車數量徽章
+    function updateCartBadge() {
+      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      const headerBadge = document.getElementById('header-cart-badge');
+      const floatBadge = document.getElementById('floating-cart-badge');
+      const totalQtyEl = document.getElementById('cart-total-qty');
+
+      if (totalCount > 0) {
+        if (headerBadge) { headerBadge.innerText = totalCount; headerBadge.classList.remove('hidden'); }
+        if (floatBadge) { floatBadge.innerText = totalCount; floatBadge.classList.remove('hidden'); }
+      } else {
+        if (headerBadge) headerBadge.classList.add('hidden');
+        if (floatBadge) floatBadge.classList.add('hidden');
+      }
+
+      if (totalQtyEl) totalQtyEl.innerText = `${totalCount} 件`;
+    }
+
+    // 開啟/關閉購物車抽屜
+    function openCartDrawer() {
+      renderCart();
+      const drawer = document.getElementById('cart-drawer');
+      if (drawer) drawer.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCartDrawer() {
+      const drawer = document.getElementById('cart-drawer');
+      if (drawer) drawer.classList.add('hidden');
+    }
+
+    // 購物車數量加減
+    function changeCartQty(idx, delta) {
+      if (!cart[idx]) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) {
+        cart.splice(idx, 1);
+      }
+      updateCartBadge();
+      renderCart();
+    }
+
+    function removeCartItem(idx) {
+      if (!cart[idx]) return;
+      cart.splice(idx, 1);
+      updateCartBadge();
+      renderCart();
+    }
+
+    // 渲染購物車清單
+    function renderCart() {
+      const wrap = document.getElementById('cart-items-wrap');
+      const subtotalEl = document.getElementById('cart-subtotal');
+      const freeShipBox = document.getElementById('cart-free-ship-box');
+      const checkoutBtn = document.getElementById('cart-checkout-btn');
+
+      if (!wrap) return;
+
+      const totalRaw = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      if (subtotalEl) subtotalEl.innerText = `NT$ ${totalRaw.toLocaleString()}`;
+
+      // 免運進度提示 (考慮會員等級)
+      if (freeShipBox) {
+        if (currentMember && (currentMember.level === 'vip' || currentMember.level === 'silver')) {
+          freeShipBox.innerHTML = `
+            <div class="flex items-center justify-between text-emerald-800 font-medium">
+              <span>${currentMember.levelTitle}：享有【每單免運費】特權！</span>
+              <span class="text-[10px] bg-emerald-100 px-2 py-0.5 rounded-full">$0 運費</span>
+            </div>
+          `;
+        } else if (totalRaw >= FREE_SHIPPING_THRESHOLD) {
+          freeShipBox.innerHTML = `
+            <div class="flex items-center justify-between text-emerald-800 font-medium">
+              <span>🎉 滿 NT$ 2,000 已達免運門檻！</span>
+              <span class="text-[10px] bg-emerald-100 px-2 py-0.5 rounded-full">超商免運</span>
+            </div>
+          `;
+        } else {
+          const diff = FREE_SHIPPING_THRESHOLD - totalRaw;
+          freeShipBox.innerHTML = `
+            <div class="flex items-center justify-between text-stone-700">
+              <span>距離滿 NT$ 2,000 免運還差 <strong>NT$ ${diff.toLocaleString()}</strong></span>
+              <span class="text-[10px] text-stone-400">7-11 賣貨便</span>
+            </div>
+          `;
+        }
+      }
+
+      if (cart.length === 0) {
+        wrap.innerHTML = `
+          <div class="py-16 text-center space-y-3 text-stone-400">
+            <i data-lucide="shopping-bag" class="w-10 h-10 mx-auto text-stone-300"></i>
+            <p class="text-xs">購物車目前是空的</p>
+            <button onclick="closeCartDrawer()" class="text-xs text-stone-800 underline font-medium">立刻挑選連線選品</button>
+          </div>
+        `;
+        if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed'); }
+        lucide.createIcons();
+        return;
+      }
+
+      if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed'); }
+
+      wrap.innerHTML = cart.map((item, idx) => `
+        <div class="flex items-center gap-3 p-2.5 rounded-xl border border-stone-100 bg-stone-50/50">
+          <img src="${item.image}" alt="${item.name}" class="w-14 h-18 object-cover rounded-lg bg-stone-200">
+          <div class="flex-1 min-w-0 space-y-1">
+            <h4 class="text-xs font-medium text-stone-800 truncate">${item.name}</h4>
+            <p class="text-[10px] text-stone-400">${item.color} / ${item.size}</p>
+            <div class="text-xs font-serif font-bold text-stone-900">NT$ ${item.price.toLocaleString()}</div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <button onclick="removeCartItem(${idx})" class="text-stone-300 hover:text-red-500 transition p-0.5">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="flex items-center border border-stone-200 rounded-lg bg-white overflow-hidden text-xs">
+              <button onclick="changeCartQty(${idx}, -1)" class="px-2 py-0.5 text-stone-500 hover:bg-stone-100">-</button>
+              <span class="px-2 font-mono text-[11px] font-medium text-stone-800">${item.qty}</span>
+              <button onclick="changeCartQty(${idx}, 1)" class="px-2 py-0.5 text-stone-500 hover:bg-stone-100">+</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // 從購物車前往結帳
+    function proceedToCheckoutFromCart() {
+      if (cart.length === 0) return;
+      closeCartDrawer();
+      openCheckoutModal();
+    }
+
+    // 處理熟客勾選核對 (限制使用一次)
+    function handleVipCheckboxChange() {
+      const chk = document.getElementById('cust-vip');
+      const warningEl = document.getElementById('vip-used-warning');
+      const phoneInput = document.getElementById('cust-phone').value.trim();
+
+      // 如果已登入或有輸入電話，先驗證
+      const checkPhone = currentMember ? currentMember.phone : phoneInput;
+      if (chk.checked && checkPhone) {
+        const mem = getMemberInfoByPhone(checkPhone);
+        if (mem && mem.hasUsedSurveyFreeShip) {
+          warningEl.classList.remove('hidden');
+          chk.checked = false; // 限制只能使用一次，自動取消勾選
+          updateCheckoutShippingStatus();
+          return;
+        }
+      }
+      
+      warningEl.classList.add('hidden');
+      updateCheckoutShippingStatus();
+    }
+
+    // 更新結帳彈窗中的免運與金額試算
+    function updateCheckoutShippingStatus() {
+      const totalRaw = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      const isVipChecked = document.getElementById('cust-vip') ? document.getElementById('cust-vip').checked : false;
+      const badgeEl = document.getElementById('checkout-shipping-badge');
+      const discountRow = document.getElementById('checkout-discount-row');
+      const discountAmountEl = document.getElementById('checkout-discount-amount');
+      const priceEl = document.getElementById('checkout-item-price');
+
+      // 檢查是否是 金卡會員 (95折)
+      const isVipMember = currentMember && currentMember.level === 'vip';
+      const isSilverMember = currentMember && currentMember.level === 'silver';
+
+      // 1. 計算商品折扣金額 (金卡會員 享有 95 折，四捨五入)
+      let finalPrice = totalRaw;
+      if (isVipMember) {
+        finalPrice = Math.round(totalRaw * 0.95);
+        const discountVal = totalRaw - finalPrice;
+        if (discountRow) {
+          discountRow.classList.remove('hidden');
+          discountAmountEl.innerText = `-NT$ ${discountVal.toLocaleString()}`;
+        }
+      } else {
+        if (discountRow) discountRow.classList.add('hidden');
+      }
+
+      if (priceEl) priceEl.innerText = `NT$ ${finalPrice.toLocaleString()}`;
+
+      // 2. 運費資格判定
+      if (isVipMember) {
+        badgeEl.innerHTML = `<span class="text-amber-800 font-medium">💎 金卡會員特權：全單免運 + 95 折</span><span class="text-stone-400">（賣貨便 $0 運費）</span>`;
+      } else if (isSilverMember) {
+        badgeEl.innerHTML = `<span class="text-stone-800 font-medium">🌟 銀卡熟客特權：每單不限金額免運</span><span class="text-stone-400">（賣貨便 $0 運費）</span>`;
+      } else if (isVipChecked) {
+        badgeEl.innerHTML = `<span class="text-amber-800 font-medium">✨ 已套用熟客回饋專屬免運</span><span class="text-stone-400">（限用一次，賣貨便 $0 運費）</span>`;
+      } else if (totalRaw >= FREE_SHIPPING_THRESHOLD) {
+        badgeEl.innerHTML = `<span class="text-emerald-700 font-medium">🎉 滿 NT$ 2,000 已達免運門檻！</span><span class="text-stone-400">（賣貨便 $0 運費）</span>`;
+      } else {
+        const diff = FREE_SHIPPING_THRESHOLD - totalRaw;
+        badgeEl.innerHTML = `<span class="text-stone-500">超商運費依 7-11 規定</span><span class="text-stone-400 text-[10px]">（還差 NT$ ${diff.toLocaleString()} 享滿額免運）</span>`;
+      }
+    }
+
+    let currentCategory = 'all';
+    // 預設內建商品（打開立刻顯示，絕不卡連線）
+    let productsData = [
+      {
+        id: "Thekat1",
+        name: "Thekat長袖襯衫",
+        tag: "上班族熱賣款",
+        category: "tops",
+        price: 980,
+        images: [
+          "https://lh3.googleusercontent.com/d/1nS3DxqaRKWrXJF1OZW7491qtn0wX5Pdg",
+          "https://lh3.googleusercontent.com/d/1vgb2YWWfaPSWnl2wjrhifV3_5kPgCDuS",
+          "https://lh3.googleusercontent.com/d/1pagtfQl2N-CJTfoUqddaQQLIAg7pdyBF",
+          "https://lh3.googleusercontent.com/d/147jDKpEosfyDZB_ignMHrBhK-tA_0Mte",
+          "https://lh3.googleusercontent.com/d/1eO1dnwMObBKG5PHgQXu4tQArp31YqKLa"
+        ],
+        colors: ["藍色", "白色"],
+        sizes: ["S", "M"],
+        desc: "版型挺實親膚，修飾身形效果極佳。通勤與日常穿搭皆適宜。"
+      }
+    ];
+    let ordersData = [
+      {
+        order_id: "RM-901",
+        phone: "0912345678",
+        customer_name: "林小姐",
+        items: "越南設計款 方領抓褶背心洋裝 (米白 / S)",
+        total_amount: 1480,
+        status_step: 3,
+        status_desc: "商品已完成胡志明門市採購，正隨當期空運班機回台途中",
+        tracking_code: "",
+        est_delivery: "2026/11/02"
+      }
+    ];
+
+    let currentActiveProduct = null;
+    let selectedColor = "";
+    let selectedSize = "";
+
+    // 切換分頁 (Shop / Track)
+    function switchTab(tab) {
+      const viewShop = document.getElementById('view-shop');
+      const viewTrack = document.getElementById('view-track');
+      const btnShop = document.getElementById('tab-shop-btn');
+      const btnTrack = document.getElementById('tab-track-btn');
+
+      if (tab === 'shop') {
+        viewShop.classList.remove('hidden');
+        viewTrack.classList.add('hidden');
+        btnShop.className = 'px-3.5 py-1.5 rounded-full transition-all bg-white text-stone-900 shadow-sm';
+        btnTrack.className = 'px-3.5 py-1.5 rounded-full transition-all hover:text-stone-900 text-stone-600';
+      } else {
+        viewShop.classList.add('hidden');
+        viewTrack.classList.remove('hidden');
+        btnTrack.className = 'px-3.5 py-1.5 rounded-full transition-all bg-white text-stone-900 shadow-sm';
+        btnShop.className = 'px-3.5 py-1.5 rounded-full transition-all hover:text-stone-900 text-stone-600';
+      }
+      lucide.createIcons();
+    }
+
+    // 分類篩選
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        const isThis = btn.dataset.cat === cat;
+        if (btn.dataset.cat === 'instock') {
+          btn.className = isThis 
+            ? 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-amber-600 text-white shadow-sm flex items-center gap-1' 
+            : 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-amber-50 text-amber-900 border border-amber-300 hover:border-amber-400 flex items-center gap-1';
+        } else {
+          btn.className = isThis 
+            ? 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow-sm' 
+            : 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400';
+        }
+      });
+      renderProducts();
+    }
+
+    // 渲染商品清單
+    function renderProducts() {
+      const grid = document.getElementById('product-grid');
+      const countEl = document.getElementById('product-count');
+      
+      const filtered = productsData.filter(p => {
+        if (currentCategory === 'all') return true;
+        if (currentCategory === 'instock') {
+          return p.category === 'instock' || (p.tag && p.tag.includes('現貨')) || (p.name && p.name.includes('現貨'));
+        }
+        return p.category === currentCategory;
+      });
+      if (countEl) countEl.innerText = `顯示 ${filtered.length} 件選品`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-white/50 border border-dashed border-stone-200 rounded-2xl">
+            <div class="w-12 h-12 mx-auto rounded-full bg-stone-100 flex items-center justify-center text-stone-400">
+              <i data-lucide="package-open" class="w-6 h-6"></i>
+            </div>
+            <p class="text-sm text-stone-600 font-medium">目前尚無上架商品或連線籌備中</p>
+            <p class="text-xs text-stone-400">請至 Google 試算表填入商品資訊，或私訊官方 LINE / IG 詢問連線</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const coverImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&auto=format&fit=crop';
+        return `
+          <div onclick="openProductModal('${p.id}')" class="group cursor-pointer bg-white border border-stone-200/80 rounded-xl overflow-hidden hover:shadow-md transition-all flex flex-col">
+            <div class="relative aspect-[3/4] bg-stone-100 overflow-hidden">
+              <img src="${coverImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              ${(p.category === 'instock' || (p.tag && p.tag.includes('現貨'))) 
+                ? `<span class="absolute top-2 left-2 bg-amber-600/90 text-white text-[10px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">⚡ ${p.tag || '現貨'}</span>`
+                : (p.tag ? `<span class="absolute top-2 left-2 bg-stone-900/80 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full">${p.tag}</span>` : '')}
+            </div>
+            <div class="p-3.5 flex flex-col flex-1 justify-between gap-1">
+              <div>
+                <p class="text-[10px] text-stone-400 uppercase tracking-widest">${p.category}</p>
+                <h4 class="text-xs sm:text-sm font-medium text-stone-800 line-clamp-1 group-hover:text-stone-950">${p.name}</h4>
+              </div>
+              <div class="text-sm sm:text-base font-serif font-bold text-stone-900 pt-1">
+                NT$ ${Number(p.price).toLocaleString()}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    // 打開商品詳情彈窗
+    function openProductModal(id) {
+      const p = productsData.find(item => item.id === id);
+      if (!p) return;
+      currentActiveProduct = p;
+
+      document.getElementById('modal-product-id').innerText = p.id;
+      document.getElementById('modal-name').innerText = p.name;
+      document.getElementById('modal-price').innerText = `NT$ ${Number(p.price).toLocaleString()}`;
+      document.getElementById('modal-cat').innerText = p.category;
+      document.getElementById('modal-tag').innerText = p.tag || '連線商品';
+      document.getElementById('modal-desc').innerText = p.desc || '無特定描述';
+
+      const mainImg = document.getElementById('modal-main-image');
+      const thumbWrap = document.getElementById('modal-thumbnails');
+      const imgs = p.images && p.images.length > 0 ? p.images : ['https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&auto=format&fit=crop'];
+      mainImg.src = imgs[0];
+
+      thumbWrap.innerHTML = imgs.map((imgUrl) => `
+        <button onclick="changeMainImage('${imgUrl}')" class="w-12 h-16 rounded-lg overflow-hidden border border-stone-200 flex-shrink-0">
+          <img src="${imgUrl}" class="w-full h-full object-cover">
+        </button>
+      `).join('');
+
+      const colorWrap = document.getElementById('modal-colors');
+      const colors = p.colors || [];
+      selectedColor = colors.length > 0 ? colors[0] : "";
+      colorWrap.innerHTML = colors.map(c => `
+        <button onclick="selectColor('${c}')" class="spec-color-btn text-xs px-3 py-1.5 rounded-lg border transition ${c === selectedColor ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-200 text-stone-700 hover:border-stone-400'}" data-color="${c}">
+          ${c}
+        </button>
+      `).join('');
+
+      const sizeWrap = document.getElementById('modal-sizes');
+      const sizes = p.sizes || [];
+      selectedSize = sizes.length > 0 ? sizes[0] : "";
+      sizeWrap.innerHTML = sizes.map(s => `
+        <button onclick="selectSize('${s}')" class="spec-size-btn text-xs px-3 py-1.5 rounded-lg border transition ${s === selectedSize ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-200 text-stone-700 hover:border-stone-400'}" data-size="${s}">
+          ${s}
+        </button>
+      `).join('');
+
+      updateSpecText();
+      document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function changeMainImage(url) {
+      document.getElementById('modal-main-image').src = url;
+    }
+
+    function selectColor(c) {
+      selectedColor = c;
+      document.querySelectorAll('.spec-color-btn').forEach(b => {
+        b.className = b.dataset.color === c 
+          ? 'spec-color-btn text-xs px-3 py-1.5 rounded-lg border transition border-stone-900 bg-stone-900 text-white'
+          : 'spec-color-btn text-xs px-3 py-1.5 rounded-lg border transition border-stone-200 text-stone-700 hover:border-stone-400';
+      });
+      updateSpecText();
+    }
+
+    function selectSize(s) {
+      selectedSize = s;
+      document.querySelectorAll('.spec-size-btn').forEach(b => {
+        b.className = b.dataset.size === s 
+          ? 'spec-size-btn text-xs px-3 py-1.5 rounded-lg border transition border-stone-900 bg-stone-900 text-white'
+          : 'spec-size-btn text-xs px-3 py-1.5 rounded-lg border transition border-stone-200 text-stone-700 hover:border-stone-400';
+      });
+      updateSpecText();
+    }
+
+    function updateSpecText() {
+      const specEl = document.getElementById('selected-spec-text');
+      specEl.innerText = `${selectedColor || '無規格'} / ${selectedSize || 'Free'}`;
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+    }
+
+    // 開啟線上結帳彈窗
+    function openCheckoutModal() {
+      if (cart.length === 0) {
+        alert('購物車目前是空的，請先挑選商品！');
+        return;
+      }
+      
+      const totalRaw = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      const totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+
+      const itemsListEl = document.getElementById('checkout-items-list');
+      const countEl = document.getElementById('checkout-items-count');
+
+      if (countEl) countEl.innerText = totalCount;
+
+      if (itemsListEl) {
+        itemsListEl.innerHTML = cart.map(item => `
+          <div class="flex items-center justify-between text-xs py-1 border-b border-stone-100/70 last:border-0">
+            <div class="truncate pr-2">
+              <span class="font-medium text-stone-800">[${item.id}] ${item.name}</span>
+              <span class="text-stone-400 text-[11px]">(${item.color}/${item.size})</span>
+            </div>
+            <div class="text-right flex-shrink-0 font-mono text-stone-600">
+              x${item.qty} · <span class="font-semibold text-stone-800">NT$ ${(item.price * item.qty).toLocaleString()}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 如果已登入會員，自動預先填入姓名與手機
+      if (currentMember) {
+        const nameInput = document.getElementById('cust-name');
+        const phoneInput = document.getElementById('cust-phone');
+        if (nameInput && !nameInput.value && currentMember.name !== '新朋友' && currentMember.name !== '貴賓顧客') {
+          nameInput.value = currentMember.name;
+        }
+        if (phoneInput && !phoneInput.value) {
+          phoneInput.value = currentMember.phone;
+        }
+      }
+
+      // 檢查熟客免運是否已用過
+      const phoneVal = currentMember ? currentMember.phone : (document.getElementById('cust-phone') ? document.getElementById('cust-phone').value.trim() : '');
+      const memCheck = getMemberInfoByPhone(phoneVal);
+      const vipWrap = document.getElementById('vip-checkbox-wrap');
+      const vipBadge = document.getElementById('vip-badge-tag');
+      const vipTip = document.getElementById('vip-tip-text');
+
+      if (memCheck && memCheck.hasUsedSurveyFreeShip) {
+        if (document.getElementById('cust-vip')) {
+          document.getElementById('cust-vip').checked = false;
+          document.getElementById('cust-vip').disabled = true;
+        }
+        if (vipBadge) {
+          vipBadge.className = "text-[9px] bg-stone-200 text-stone-500 px-1.5 py-0.5 rounded font-normal";
+          vipBadge.innerText = "已兌換過";
+        }
+        if (vipTip) vipTip.innerText = "此手機號碼已於過往訂單兌換過熟客表單免運優惠（每人限用 1 次）。";
+      } else {
+        if (document.getElementById('cust-vip')) {
+          document.getElementById('cust-vip').disabled = false;
+          document.getElementById('cust-vip').checked = false;
+        }
+        if (vipBadge) {
+          vipBadge.className = "text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal";
+          vipBadge.innerText = "限用一次";
+        }
+        if (vipTip) vipTip.innerText = "勾選後將直接為您導向【免運專屬賣場】（核款時會對照表單紀錄與歷史使用次數）";
+      }
+
+      updateCheckoutShippingStatus();
+      document.getElementById('checkout-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.add('hidden');
+    }
+
+    function copyBankAccount() {
+      const acc = document.getElementById('bank-acc-text').innerText.replace(/-/g, '');
+      navigator.clipboard.writeText(acc).then(() => {
+        alert('已複製中華郵政帳號：' + acc);
+      });
+    }
+
+    // 處理填單提交 (整合多品項、會員等級、95折、熟客免運判定)
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submit-order-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "訂單傳送中...";
+
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const last5 = document.getElementById('cust-last5').value.trim();
+      const social = document.getElementById('cust-social').value.trim();
+      const store = document.getElementById('cust-store').value.trim();
+
+      // 計算最新即時會員資格
+      const memberStatus = getMemberInfoByPhone(phone);
+      const isVipMember = memberStatus && memberStatus.level === 'vip';
+      const isSilverMember = memberStatus && memberStatus.level === 'silver';
+
+      // 檢查熟客勾選
+      let isSurveyVip = document.getElementById('cust-vip') ? document.getElementById('cust-vip').checked : false;
+      if (isSurveyVip && memberStatus && memberStatus.hasUsedSurveyFreeShip) {
+        alert('提醒：此手機號碼過去已使用過一次熟客回饋免運，本次將依滿額門檻判定運費！');
+        isSurveyVip = false;
+      }
+
+      const totalRaw = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      let finalAmount = totalRaw;
+      if (isVipMember) {
+        finalAmount = Math.round(totalRaw * 0.95);
+      }
+
+      // 是否免運判定
+      const isFreeShipping = isVipMember || isSilverMember || isSurveyVip || (totalRaw >= FREE_SHIPPING_THRESHOLD);
+
+      let shippingTag = "【一般運費】";
+      if (isVipMember) {
+        shippingTag = "【金卡會員免運+95折】";
+      } else if (isSilverMember) {
+        shippingTag = "【銀卡熟客每單免運】";
+      } else if (isSurveyVip) {
+        shippingTag = "【熟客免運】";
+      } else if (totalRaw >= FREE_SHIPPING_THRESHOLD) {
+        shippingTag = "【滿額免運】";
+      }
+
+      // 多件商品品項字串明細
+      const itemsDetail = cart.map(i => `[${i.id}] ${i.name} (${i.color}/${i.size}) x${i.qty}`).join(", ") + " " + shippingTag;
+
+      const randomOrderId = "RM-" + Math.floor(100 + Math.random() * 900);
+
+      const orderPayload = {
+        order_id: randomOrderId,
+        phone: phone,
+        customer_name: name,
+        items: itemsDetail,
+        total_amount: finalAmount,
+        remitt_last5: last5,
+        store_name: store,
+        social_account: social,
+        status_step: 1,
+        status_desc: "已收到填單，待對帳核款中",
+        tracking_code: "",
+        est_delivery: "採購連線確認中",
+        order_time: new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
+        is_free_shipping: isFreeShipping,
+        shipping_tag: shippingTag
+      };
+
+      if (GOOGLE_SCRIPT_API_URL && !GOOGLE_SCRIPT_API_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE")) {
+        fetch(GOOGLE_SCRIPT_API_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload)
+        }).then(() => {
+          finishOrderSuccess(orderPayload);
+        }).catch(() => {
+          finishOrderSuccess(orderPayload);
+        });
+      } else {
+        finishOrderSuccess(orderPayload);
+      }
+    }
+
+    function finishOrderSuccess(order) {
+      ordersData.unshift(order);
+      currentOrderPhone = order.phone;
+
+      // 自動登入或更新會員資訊
+      currentMember = getMemberInfoByPhone(order.phone);
+      localStorage.setItem('rumie_member_phone', order.phone);
+      updateHeaderMemberUI();
+
+      // 關閉填單彈窗
+      closeCheckoutModal();
+      closeProductModal();
+
+      const submitBtn = document.getElementById('submit-order-btn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> 確認並送出訂單`;
+      }
+
+      // 判定賣貨便目標賣場 (免運 vs 非免運)
+      const isFree = order.is_free_shipping;
+      const targetUrl = isFree ? SHIP_FREE_URL : SHIP_NORMAL_URL;
+
+      // 更新成功彈窗內容
+      const succOrderId = document.getElementById('succ-order-id');
+      const succOrderMemo = document.getElementById('succ-order-memo');
+      const succMyshipBtn = document.getElementById('succ-myship-btn');
+      const badge = document.getElementById('succ-shipping-badge');
+      const desc = document.getElementById('succ-shipping-desc');
+      const box = document.getElementById('shipping-status-box');
+
+      if (succOrderId) succOrderId.innerText = order.order_id;
+      if (succOrderMemo) succOrderMemo.innerText = order.order_id;
+      if (succMyshipBtn) succMyshipBtn.href = targetUrl;
+
+      if (isFree) {
+        if (badge) {
+          badge.className = "text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+          badge.innerText = order.shipping_tag ? order.shipping_tag.replace(/【|】/g, '') : "免運專屬賣場";
+        }
+        if (desc) desc.innerText = "您本次訂購享有免運資格！請點擊下方按鈕前往【7-11 賣貨便免運專場】選擇取件超商門市。";
+        if (box) box.className = "p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-2 text-left";
+      } else {
+        if (badge) {
+          badge.className = "text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-stone-200 text-stone-700";
+          badge.innerText = "一般運費賣場";
+        }
+        if (desc) desc.innerText = "本次訂單未達免運門檻，請點擊下方按鈕前往【7-11 賣貨便賣場】選擇取件超商門市並完成寄件建立。";
+        if (box) box.className = "p-4 rounded-xl border border-stone-200 bg-stone-50 space-y-2 text-left";
+      }
+
+      // 顯示專屬賣貨便跳轉彈窗
+      const successModal = document.getElementById('order-success-modal');
+      if (successModal) {
+        successModal.classList.remove('hidden');
+      }
+
+      // 自動開新分頁導向賣貨便賣場
+      try {
+        window.open(targetUrl, '_blank');
+      } catch (err) {
+        console.log("Auto popup blocked, user can click button", err);
+      }
+
+      // 清空購物車與重置表單
+      cart = [];
+      updateCartBadge();
+      const checkoutForm = document.getElementById('checkout-form');
+      if (checkoutForm) checkoutForm.reset();
+
+      lucide.createIcons();
+    }
+
+    function closeSuccessAndGoTrack() {
+      const successModal = document.getElementById('order-success-modal');
+      if (successModal) successModal.classList.add('hidden');
+      if (currentOrderPhone) {
+        const trackInput = document.getElementById('track-input');
+        if (trackInput) trackInput.value = currentOrderPhone;
+        switchTab('track');
+        handleSearchOrder();
+      }
+    }
+
+    // 訂單查詢功能
+    function handleSearchOrder() {
+      const input = document.getElementById('track-input').value.trim();
+      const resultWrap = document.getElementById('tracking-result');
+
+      if (!input) {
+        alert('請輸入手機號碼或訂單編號');
+        return;
+      }
+
+      const match = ordersData.find(o => o.phone === input || o.order_id.toLowerCase() === input.toLowerCase());
+
+      if (!match) {
+        resultWrap.innerHTML = `
+          <div class="p-8 text-center bg-white border border-stone-200 rounded-2xl text-stone-500 space-y-3">
+            <i data-lucide="help-circle" class="w-8 h-8 mx-auto text-stone-300"></i>
+            <p class="font-medium text-stone-700">查無對應之訂單資訊</p>
+            <p class="text-xs text-stone-400">請確認輸入之手機號碼是否正確，或直接私訊官方 LINE 客服核對</p>
+            <div class="pt-2">
+              <a href="https://lin.ee/pbP9jv1i" target="_blank" class="inline-flex items-center gap-1.5 text-xs bg-emerald-600 text-white px-3.5 py-2 rounded-xl hover:bg-emerald-700 transition">
+                <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                私訊官方 LINE 客服
+              </a>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      const steps = [
+        { label: '核款中/完成', desc: '已核對款項' },
+        { label: '門市採購', desc: '越南門市採買中' },
+        { label: '國際空運', desc: '班機回台途中' },
+        { label: '品檢分裝', desc: '台灣倉庫整理' },
+        { label: '賣貨便寄出', desc: '包裹已出貨' }
+      ];
+
+      resultWrap.innerHTML = `
+        <div class="bg-white border border-stone-200 rounded-2xl p-6 space-y-6 shadow-sm">
+          <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+            <div>
+              <span class="text-xs text-stone-400 font-mono">${match.order_id}</span>
+              <h3 class="text-base font-semibold text-stone-900">${match.customer_name} 的訂單</h3>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-stone-400">預估抵達</span>
+              <p class="text-sm font-medium text-stone-800">${match.est_delivery || '採購確認中'}</p>
+            </div>
+          </div>
+
+          <div class="relative py-2">
+            <div class="overflow-hidden h-1.5 mb-6 text-xs flex rounded bg-stone-100">
+              <div style="width: ${(match.status_step / 5) * 100}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-stone-900 transition-all duration-500"></div>
+            </div>
+            <div class="grid grid-cols-5 gap-1 text-center">
+              ${steps.map((st, i) => `
+                <div class="space-y-1">
+                  <div class="text-[10px] font-semibold ${i + 1 <= match.status_step ? 'text-stone-900' : 'text-stone-300'}">${st.label}</div>
+                  <div class="text-[8px] text-stone-400 hidden sm:block">${st.desc}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="bg-stone-50 p-4 rounded-xl border border-stone-100 space-y-2">
+            <div class="flex items-center gap-2 text-xs font-semibold text-stone-800">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              當前貨況說明
+            </div>
+            <p class="text-xs text-stone-600 leading-relaxed">${match.status_desc}</p>
+          </div>
+
+          ${match.tracking_code ? `
+            <div class="border border-stone-200 p-4 rounded-xl flex items-center justify-between">
+              <div>
+                <p class="text-[10px] text-stone-400">7-11 賣貨便包裹單號</p>
+                <p class="text-sm font-mono font-bold text-stone-900">${match.tracking_code}</p>
+              </div>
+              <a href="https://eservice.7-11.com.tw/e-tracking/search.aspx" target="_blank" class="text-xs bg-stone-900 text-white px-3 py-1.5 rounded-lg hover:bg-stone-800 transition">
+                前往 7-11 查詢
+              </a>
+            </div>
+          ` : ''}
+
+          <div class="border-t border-stone-100 pt-4 text-xs space-y-1">
+            <div class="text-stone-400">訂購內容：</div>
+            <div class="text-stone-700 font-medium">${match.items}</div>
+            <div class="text-stone-500 pt-1">總金額：NT$ ${Number(match.total_amount).toLocaleString()}</div>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    // 自動讀取試算表
+    function initData() {
+      // 1. 先立即渲染已有的商品，確保客人一進來立刻看到
+      renderProducts();
+      initMemberAuth();
+
+      // 2. 背景嘗試同步 Google 試算表
+      if (PRODUCTS_CSV_URL && !PRODUCTS_CSV_URL.includes("YOUR_PRODUCTS_CSV_URL_HERE")) {
+        Papa.parse(PRODUCTS_CSV_URL, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            if (results.data && results.data.length > 0) {
+              const findKey = (item, candidates) => {
+                for (let c of candidates) {
+                  for (let k in item) {
+                    if (k.trim().toLowerCase() === c.toLowerCase()) return item[k];
+                  }
+                }
+                return '';
+              };
+
+              const parsed = results.data.map(item => {
+                const rawId = findKey(item, ['id', 'ID', '編號']);
+                const rawName = findKey(item, ['name', '商品名稱', '名稱']);
+                const rawTag = findKey(item, ['tag', '標籤']);
+                const rawCat = findKey(item, ['category', '分類']);
+                const rawPrice = findKey(item, ['price', '價格', '售價']);
+                const rawImages = findKey(item, ['images', '圖片', '圖片網址']);
+                const rawColors = findKey(item, ['colors', '顏色']);
+                const rawSizes = findKey(item, ['sizes', '尺寸']);
+                const rawDesc = findKey(item, ['desc', '介紹', '描述']);
+
+                let imgList = rawImages ? rawImages.split(',').map(s => s.trim()) : [];
+                let processedImages = imgList.map(url => {
+                  if (url.includes('drive.google.com/file/d/')) {
+                    let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                      return `https://lh3.googleusercontent.com/d/${match[1]}`;
+                    }
+                  }
+                  return url;
+                });
+
+                let cat = (rawCat || '').toLowerCase().trim();
+                if (cat.includes('現貨') || cat === 'instock') {
+                  cat = 'instock';
+                } else if (cat.includes('上衣') || cat.includes('襯衫') || cat.includes('背心') || cat === 'tops') {
+                  cat = 'tops';
+                } else if (cat.includes('褲') || cat.includes('洋裝') || cat.includes('裙') || cat === 'bottoms') {
+                  cat = 'bottoms';
+                } else if (cat.includes('外套') || cat.includes('罩衫') || cat === 'outerwear') {
+                  cat = 'outerwear';
+                } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat.includes('鞋') || cat === 'accessories' || cat === 'shoes') {
+                  cat = 'accessories';
+                } else {
+                  cat = 'tops';
+                }
+
+                let numPrice = Number(rawPrice.toString().replace(/[^0-9]/g, '')) || 0;
+
+                return {
+                  id: rawId,
+                  name: rawName,
+                  tag: rawTag,
+                  category: cat,
+                  price: numPrice,
+                  images: processedImages,
+                  colors: rawColors ? rawColors.split(',').map(s => s.trim()) : [],
+                  sizes: rawSizes ? rawSizes.split(',').map(s => s.trim()) : [],
+                  desc: rawDesc || ''
+                };
+              }).filter(p => p.id && p.name);
+
+              if (parsed.length > 0) {
+                productsData = parsed;
+                renderProducts();
+                initMemberAuth();
+              }
+            }
+          }
+        });
+      }
+
+      // 讀取訂單資料
+      if (ORDERS_CSV_URL && !ORDERS_CSV_URL.includes("YOUR_ORDERS_CSV_URL_HERE")) {
+        Papa.parse(ORDERS_CSV_URL, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          error: function(err) {
+            console.error("Orders CSV error:", err);
+          },
+          complete: function(results) {
+            if (results.data && results.data.length > 0) {
+              const findKey = (item, candidates) => {
+                for (let c of candidates) {
+                  for (let k in item) {
+                    if (k.trim().toLowerCase() === c.toLowerCase()) return item[k];
+                  }
+                }
+                return '';
+              };
+
+              const parsed = results.data.map(item => {
+                const oId = findKey(item, ['order_id', 'orderid', '訂單編號', '訂單號']);
+                const ph = findKey(item, ['phone', '電話', '手機', '手機號碼']);
+                const name = findKey(item, ['customer_name', 'name', '姓名', '顧客姓名']);
+                const items = findKey(item, ['items', '品項', '商品', '購買品項']);
+                const total = findKey(item, ['total_amount', 'amount', '總金額', '金額']);
+                const step = findKey(item, ['status_step', 'step', '進度', '狀態階段']);
+                const desc = findKey(item, ['status_desc', 'desc', '貨況說明', '狀態說明']);
+                const code = findKey(item, ['tracking_code', 'tracking', '物流單號', '賣貨便單號']);
+                const est = findKey(item, ['est_delivery', 'delivery', '預估抵達']);
+
+                return {
+                  order_id: (oId || '').trim(),
+                  phone: (ph || '').trim().replace(/^'/, ''),
+                  customer_name: (name || '').trim(),
+                  items: (items || '').trim(),
+                  total_amount: total ? Number(total.toString().replace(/[^0-9]/g, '')) : 0,
+                  status_step: step ? Number(step) : 1,
+                  status_desc: (desc || '已收到填單，待對帳核款中').trim(),
+                  tracking_code: (code || '').trim(),
+                  est_delivery: (est || '採購確認中').trim()
+                };
+              }).filter(o => o.order_id || o.phone);
+
+              if (parsed.length > 0) {
+                ordersData = parsed;
+                initMemberAuth();
+              }
+            }
+          }
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initData);
+    initData();
+  </script>
+</body>
+</html>
