@@ -382,7 +382,7 @@
           <div class="space-y-0.5 text-stone-500 text-[10px]">
             <p>🌱 <strong>一般顧客</strong>：單筆滿 NT$ 2,000 享免運</p>
             <p>✨ <strong>熟客回饋表單</strong>：免運優惠限定使用一次</p>
-            <p>🌟 <strong>銀卡熟客（累計滿 $5,000）</strong>：每單免運費</p>
+            <p>🌟 <strong>銀卡會員（累計滿 $5,000）</strong>：每單免運費</p>
             <p>💎 <strong>金卡會員（累計滿 $8,000）</strong>：每單免運 + 全單 95 折</p>
           </div>
         </div>
@@ -701,7 +701,7 @@
     // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
     const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
     const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
-    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzWAoVPCeyHwf_8iJc9am9nmKjl-qbaqJM9DowgPkrxFFhtfHVw0qKJT7_n5A8jzmBwZA/exec";
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzAPHgAWE8nrx9Ni6NipTX8GU5PjY1kN2jj_cylleKFCrQznWC-4B23cokfGNEshEsvJg/exec";
 
     // ★★★ 7-11 賣貨便賣場網址設定 ★★★
     const SHIP_FREE_URL = "https://myship.7-11.com.tw/general/detail/GM2610137933867";
@@ -744,7 +744,7 @@
         discountRate = 0.95;
       } else if (totalSpent >= SILVER_MEMBER_THRESHOLD) {
         level = 'silver';
-        levelTitle = '🌟 銀卡熟客';
+        levelTitle = '🌟 銀卡會員';
         discountRate = 1;
       }
 
@@ -804,7 +804,7 @@
           btnText.innerHTML = `<span class="text-amber-700 font-bold">💎 金卡 ${currentMember.name || ''}</span>`;
           btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-stone-800 hover:border-amber-500 transition shadow-xs text-xs font-medium";
         } else if (currentMember.level === 'silver') {
-          btnText.innerHTML = `<span class="text-stone-800 font-semibold">🌟 熟客 ${currentMember.name || ''}</span>`;
+          btnText.innerHTML = `<span class="text-stone-800 font-semibold">🌟 銀卡 ${currentMember.name || ''}</span>`;
           btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 border border-stone-300 text-stone-800 transition shadow-xs text-xs font-medium";
         } else {
           btnText.innerText = currentMember.name ? `👤 ${currentMember.name}` : `👤 會員專區`;
@@ -867,13 +867,13 @@
         } else if (currentMember.level === 'silver') {
           perkEl.innerText = "每單免運費";
           const diff = VIP_MEMBER_THRESHOLD - currentMember.totalSpent;
-          statusEl.innerText = "🌟 銀卡熟客";
+          statusEl.innerText = "🌟 銀卡會員";
           tipEl.innerHTML = `已享【每單不限金額免運】！再累積消費 <strong>NT$ ${diff.toLocaleString()}</strong> 即可晉升【💎 金卡會員】，再享每單 95 折！`;
         } else {
           perkEl.innerText = "滿額 NT$ 2,000 免運";
           const diffSilver = SILVER_MEMBER_THRESHOLD - currentMember.totalSpent;
           statusEl.innerText = "🌱 一般會員";
-          tipEl.innerHTML = `歷史累積訂購 ${currentMember.orderCount} 筆。距離晉升【🌟 銀卡熟客（每單免運）】還差 <strong>NT$ ${diffSilver.toLocaleString()}</strong>！`;
+          tipEl.innerHTML = `歷史累積訂購 ${currentMember.orderCount} 筆。距離晉升【🌟 銀卡會員（每單免運）】還差 <strong>NT$ ${diffSilver.toLocaleString()}</strong>！`;
         }
       } else {
         if (defaultView === 'register') {
@@ -1231,7 +1231,7 @@
       if (isVipMember) {
         badgeEl.innerHTML = `<span class="text-amber-800 font-medium">💎 金卡會員特權：全單免運 + 95 折</span><span class="text-stone-400">（賣貨便 $0 運費）</span>`;
       } else if (isSilverMember) {
-        badgeEl.innerHTML = `<span class="text-stone-800 font-medium">🌟 銀卡熟客特權：每單不限金額免運</span><span class="text-stone-400">（賣貨便 $0 運費）</span>`;
+        badgeEl.innerHTML = `<span class="text-stone-800 font-medium">🌟 銀卡會員特權：每單不限金額免運</span><span class="text-stone-400">（賣貨便 $0 運費）</span>`;
       } else if (isVipChecked) {
         badgeEl.innerHTML = `<span class="text-amber-800 font-medium">✨ 已套用熟客回饋專屬免運</span><span class="text-stone-400">（限用一次，賣貨便 $0 運費）</span>`;
       } else if (totalRaw >= FREE_SHIPPING_THRESHOLD) {
@@ -1576,7 +1576,7 @@
       if (isVipMember) {
         shippingTag = "【金卡會員免運+95折】";
       } else if (isSilverMember) {
-        shippingTag = "【銀卡熟客每單免運】";
+        shippingTag = "【銀卡會員每單免運】";
       } else if (isSurveyVip) {
         shippingTag = "【熟客免運】";
       } else if (totalRaw >= FREE_SHIPPING_THRESHOLD) {
