@@ -826,7 +826,7 @@
     // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
     const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
     const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
-    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzEJZK76UzMM8r_0pcjYQb23Jg2KQ2CG1evEQtUjA5g-KL7e73kc_JASpoU3AAm6T1ZcQ/exec";
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzTsQY-_S665zkGXSzaLwzgW6z3xd8ZzR5vY1QMxNfKCPC4-jPO4Y5dVTAh0s9DZ2sntw/exec";
 
     // ★★★ 7-11 賣貨便賣場網址設定 ★★★
     const SHIP_FREE_URL = "https://myship.7-11.com.tw/general/detail/GM2610137933867";
@@ -1495,13 +1495,14 @@
       } else if (isVipChecked) {
         badgeEl.innerHTML = `<span class="text-amber-800 font-medium">✨ 已套用熟客回饋專屬免運</span><span class="text-stone-400">（限用一次，賣貨便 $0 運費）</span>`;
       } else if (totalRaw >= FREE_SHIPPING_THRESHOLD) {
-        badgeEl.innerHTML = `<span class="text-emerald-700 font-medium">🎉 滿 NT$ 2,000 已達免運門檻！</span><span class="text-stone-400">（超商免運）</span>`;
+        badgeEl.innerHTML = `<span class="text-emerald-700 font-medium">🎉 滿 NT$ 2,000 已達免運門檻！</span><span class="text-stone-400">（賣貨便 $0 運費）</span>`;
       } else {
         const diff = FREE_SHIPPING_THRESHOLD - totalRaw;
         badgeEl.innerHTML = `<span class="text-stone-500">超商運費依 7-11 規定</span><span class="text-stone-400 text-[10px]">（還差 NT$ ${diff.toLocaleString()} 享滿額免運）</span>`;
       }
     }
 
+    
     // ★★★ 優惠碼系統 (折抵 NT$ 30) ★★★
     let appliedCoupon = null; // 當前套用之優惠碼代碼
 
@@ -1701,7 +1702,7 @@
       renderProducts();
     }
 
-    // 渲染商品清單
+    // 渲染商品清單 (超強容錯與大小寫相容)
     function renderProducts() {
       const grid = document.getElementById('product-grid');
       const countEl = document.getElementById('product-count');
@@ -1713,33 +1714,46 @@
         const pTag = (p.tag || '').toLowerCase();
         const isMen = pCat.startsWith('men') || pName.includes('男') || pTag.includes('男');
 
+        // 1. 如果點擊「全部選品」，直接顯示所有商品！絕對不漏掉
+        if (currentMainGroup === 'all' && currentCategory === 'all') {
+          return true;
+        }
+
+        // 2. 現貨專區
         if (currentCategory === 'instock' || currentMainGroup === 'instock') {
           return pCat === 'instock' || pTag.includes('現貨') || pName.includes('現貨');
         }
+        // 穿搭推薦
         if (currentCategory === 'coord' || currentMainGroup === 'coord') {
           return pCat === 'coord' || pTag.includes('搭') || pTag.includes('套裝') || pName.includes('搭') || pName.includes('套裝');
         }
 
-        if (currentCategory === 'men_all') return isMen;
-        if (currentCategory === 'men_tops') {
-          return isMen && (pCat.includes('tops') || pCat.includes('shirt') || pName.includes('短袖') || pName.includes('襯衫') || pName.includes('短t') || pName.includes('polo'));
-        }
-        if (currentCategory === 'men_outer') {
-          return isMen && (pCat.includes('outer') || pName.includes('長袖') || pName.includes('外套') || pName.includes('夾克') || pName.includes('西裝') || pName.includes('衛衣') || pName.includes('帽t') || pName.includes('長t'));
-        }
-        if (currentCategory === 'men_bottoms') {
-          return isMen && (pCat.includes('bottom') || pName.includes('褲'));
+        // 3. 男裝專區過濾
+        if (currentMainGroup === 'men') {
+          if (!isMen) return false; // 若主分區是男裝，只留男裝
+          if (currentCategory === 'men_all') return true;
+          if (currentCategory === 'men_tops') {
+            return pCat.includes('tops') || pCat.includes('shirt') || pName.includes('短袖') || pName.includes('襯衫') || pName.includes('短t') || pName.includes('polo');
+          }
+          if (currentCategory === 'men_outer') {
+            return pCat.includes('outer') || pName.includes('長袖') || pName.includes('外套') || pName.includes('夾克') || pName.includes('西裝') || pName.includes('衛衣') || pName.includes('帽t') || pName.includes('長t');
+          }
+          if (currentCategory === 'men_bottoms') {
+            return pCat.includes('bottom') || pName.includes('褲');
+          }
+          return true;
         }
 
-        if (currentCategory === 'women_all') return !isMen;
+        // 4. 女裝專區過濾
         if (currentMainGroup === 'women') {
-          if (isMen) return false;
-          return pCat === currentCategory;
+          if (isMen) return false; // 女裝排除男裝
+          if (currentCategory === 'women_all') return true;
+          return pCat === currentCategory || pCat.includes(currentCategory);
         }
 
+        // 5. 其他全部分類比對（大小寫不敏感）
         if (currentCategory === 'all') return true;
-
-        return pCat === currentCategory;
+        return pCat === currentCategory || pCat.includes(currentCategory);
       });
 
       if (countEl) countEl.innerText = `顯示 ${filtered.length} 件選品`;
@@ -2270,7 +2284,7 @@
           <div class="border-t border-stone-100 pt-4 text-xs space-y-1">
             <div class="text-stone-400">訂購內容：</div>
             <div class="text-stone-700 font-medium">${match.items}</div>
-            <div class="text-stone-500 pt-1">總金額：NT$ ${Number(match.total_amount).toLocaleString()}</div>
+            <div class="text-stone-500 pt-1">總金額: NT$ ${Number(match.total_amount).toLocaleString()}</div>
           </div>
         </div>
       `;
