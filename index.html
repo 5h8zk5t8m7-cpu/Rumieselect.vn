@@ -89,7 +89,7 @@
             <span>IG</span>
           </a>
           <a href="https://www.threads.com/@rumie.select.vt?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" 
-             class="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 bg-white/80 border border-stone-200 px-2.5 py-1.5 rounded-full transition hover:border-stone-400">
+             class="flex items-center gap-1.5 text-xs text-stone-600 hover:text-stone-900 bg-white/80 border border-stone-200 px-2.5 py-1.5 rounded-full transition hover:border-stone-400">
             <svg class="w-3.5 h-3.5 fill-current text-stone-700" viewBox="0 0 192 192">
               <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6145 63.5383 90.6409 61.1685 97.1627 61.1685C110.1 61.1685 119.537 69.3496 121.282 82.2037C114.167 80.4905 106.31 79.7997 97.7777 80.148C74.6198 81.0858 59.9575 92.4842 61.0829 108.647C62.0673 122.795 73.8409 131.787 88.7501 131.787C105.748 131.787 117.842 121.841 123.003 108.43C127.355 116.349 133.916 121.731 143.084 121.731C154.673 121.731 163.504 113.626 163.504 99.3093C163.504 63.266 135.083 31.5 97.222 31.5C59.9575 31.5 28.5 61.4727 28.5 100.082C28.5 138.835 59.9575 168.808 97.222 168.808C117.067 168.808 134.619 160.672 146.425 146.852L133.684 135.498C124.639 146.126 111.954 152.384 97.222 152.384C69.0437 152.384 45.4124 128.847 45.4124 100.082C45.4124 71.4608 69.0437 47.9242 97.222 47.9242C126.837 47.9242 147.08 72.822 147.08 99.3093C147.08 105.158 143.725 108.204 139.778 108.204C134.82 108.204 130.655 103.528 127.702 96.0689C133.308 93.1818 137.986 90.761 141.537 88.9883ZM98.3905 115.363C88.0264 115.363 80.0801 109.919 79.5293 102.008C78.9619 93.8587 86.6433 87.7289 98.4069 87.2536C105.41 86.9712 112.001 87.7077 118.067 89.4449C115.658 105.777 107.568 115.363 98.3905 115.363Z"/>
             </svg>
@@ -507,43 +507,7 @@
             <div id="checkout-items-list" class="space-y-1.5 max-h-44 overflow-y-auto pr-1">
               <!-- JS 動態渲染多件清單 -->
             </div>
-            <!-- 折扣明細 -->
-            <div id="checkout-discount-row" class="hidden flex justify-between items-center pt-1.5 border-t border-stone-200/60 text-emerald-700 text-xs font-medium">
-              <span>💎 金卡會員專屬 95 折：</span>
-              <span id="checkout-discount-amount">-NT$ 0</span>
-            </div>
-            <div class="flex justify-between items-center pt-1.5 border-t border-stone-200/60">
-              <div>
-                <span class="text-stone-500">應匯款商品總額：</span>
-                <span class="text-[10px] text-stone-400 block">（已扣除 95 折優惠）</span>
-              </div>
-              <span class="text-base font-serif font-bold text-stone-900" id="checkout-item-price">NT$ 0</span>
-            </div>
-            <!-- 免運進度徽章 -->
-            <div id="checkout-shipping-badge" class="pt-1 text-[11px] flex items-center justify-between text-stone-600">
-              <!-- JS 動態計算更新 -->
-            </div>
-          </div>
-
-          <!-- 熟客優惠勾選 (限用一次) -->
-          <div class="space-y-1">
-            <label id="vip-checkbox-wrap" class="flex items-start gap-2.5 bg-amber-50/50 border border-amber-200/60 p-3 rounded-xl cursor-pointer hover:bg-amber-50 transition">
-              <input type="checkbox" id="cust-vip" onchange="handleVipCheckboxChange()" class="mt-0.5 rounded text-stone-900 border-stone-300 focus:ring-0">
-              <div class="space-y-0.5 flex-1">
-                <div class="font-semibold text-stone-800 text-xs flex items-center justify-between">
-                  <span class="flex items-center gap-1">✨ 我有填寫熟客回饋表單，享有專屬免運優惠！</span>
-                  <span id="vip-badge-tag" class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal">限用一次</span>
-                </div>
-                <p class="text-[10px] text-stone-500" id="vip-tip-text">勾選後將直接為您導向【免運專屬賣場】（核款時會對照表單紀錄與歷史使用次數）</p>
-              </div>
-            </label>
-            <div id="vip-used-warning" class="hidden text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-              <span>⚠️</span>
-              <span>此手機號碼之熟客回饋免運已於歷史訂單使用過囉（每人限用一次），本次依會員等級與滿額門檻計費。</span>
-            </div>
-          </div>
-
-        <!-- 優惠折扣明細 -->
+            <!-- 優惠折扣明細 -->
             <div id="checkout-discount-row" class="hidden flex justify-between items-center pt-1.5 border-t border-stone-200/60 text-emerald-700 text-xs font-medium">
               <span>💎 金卡會員專屬 95 折：</span>
               <span id="checkout-discount-amount">-NT$ 0</span>
@@ -593,6 +557,24 @@
             </div>
           </div>
 
+          <!-- 熟客優惠勾選 (限用一次) -->
+          <div class="space-y-1">
+            <label id="vip-checkbox-wrap" class="flex items-start gap-2.5 bg-amber-50/50 border border-amber-200/60 p-3 rounded-xl cursor-pointer hover:bg-amber-50 transition">
+              <input type="checkbox" id="cust-vip" onchange="handleVipCheckboxChange()" class="mt-0.5 rounded text-stone-900 border-stone-300 focus:ring-0">
+              <div class="space-y-0.5 flex-1">
+                <div class="font-semibold text-stone-800 text-xs flex items-center justify-between">
+                  <span class="flex items-center gap-1">✨ 我有填寫熟客回饋表單，享有專屬免運優惠！</span>
+                  <span id="vip-badge-tag" class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal">限用一次</span>
+                </div>
+                <p class="text-[10px] text-stone-500" id="vip-tip-text">勾選後將直接為您導向【免運專屬賣場】（核款時會對照表單紀錄與歷史使用次數）</p>
+              </div>
+            </label>
+            <div id="vip-used-warning" class="hidden text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+              <span>⚠️</span>
+              <span>此手機號碼之熟客回饋免運已於歷史訂單使用過囉（每人限用一次），本次依會員等級與滿額門檻計費。</span>
+            </div>
+          </div>
+
           <!-- 第一步按鈕：前往下一步 -->
           <div class="pt-2">
             <button type="button" onclick="goToCheckoutStep(2)" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
@@ -617,17 +599,46 @@
               <p><strong>帳號號碼：</strong> <span id="bank-acc-text" class="font-mono font-semibold">24414050548389</span></p>
               <p><strong>戶名：</strong> 邱Ｏ沂</p>
             </div>
-            <div class="pt-2 border-t border-amber-200/60 space-y-1.5">
-              <div class="p-2.5 rounded-xl bg-red-50 border-2 border-red-500 text-red-800 font-bold text-xs flex items-start gap-2 shadow-xs">
-                <span class="text-base leading-none">⚠️</span>
-                <div class="space-y-0.5">
-                  <div class="text-red-600 font-extrabold text-[12px] tracking-wide">【匯款金額注意】</div>
-                  <div class="text-[11px] font-medium leading-relaxed">
-                    實際匯款金額為：<span class="text-red-600 font-black underline underline-offset-2 text-xs">訂單總價 - 100 元</span>！<br>
-                    <span class="text-stone-500 font-normal">（留 100 元作為 7-11 賣貨便尾款，取件付款即可）</span>
+            <div class="pt-2 border-t border-amber-200/60 space-y-2">
+              <!-- 醒目金額確認與計算明細卡片 -->
+              <div class="p-3 rounded-xl bg-red-50 border-2 border-red-500 text-stone-800 space-y-2 shadow-xs">
+                <div class="flex items-center justify-between font-bold text-xs text-red-700 border-b border-red-200/80 pb-1.5">
+                  <span class="flex items-center gap-1 text-[12px] font-extrabold">⚠️【本次轉帳匯款金額確認】</span>
+                  <span id="step2-coupon-badge" class="text-[9px] bg-red-100 text-red-700 border border-red-200 px-1.5 py-0.5 rounded font-medium hidden">已折抵 30 元優惠碼</span>
+                </div>
+
+                <!-- 各項金額明細 -->
+                <div class="space-y-1 text-[11px]">
+                  <div class="flex justify-between text-stone-600">
+                    <span>商品合計：</span>
+                    <span id="step2-raw-total" class="font-mono">NT$ 0</span>
+                  </div>
+                  <div id="step2-discount-row" class="hidden flex justify-between text-emerald-700">
+                    <span>💎 金卡會員 95 折：</span>
+                    <span id="step2-discount-val" class="font-mono">-NT$ 0</span>
+                  </div>
+                  <div id="step2-coupon-row" class="hidden flex justify-between text-emerald-700 font-medium">
+                    <span>🎟️ 專屬優惠碼折抵：</span>
+                    <span class="font-mono">-NT$ 30</span>
+                  </div>
+                  <div class="flex justify-between text-stone-500">
+                    <span>7-11 賣貨便尾款 (取貨時付款)：</span>
+                    <span class="font-mono">-NT$ 100</span>
                   </div>
                 </div>
+
+                <!-- 最終轉帳總額 (超大紅字) -->
+                <div class="pt-2 border-t border-red-200 flex justify-between items-baseline">
+                  <span class="font-black text-red-800 text-xs">👉 本次應匯款金額：</span>
+                  <div class="text-right">
+                    <span id="step2-final-remit" class="text-xl font-serif font-black text-red-600 font-mono tracking-tight">NT$ 0</span>
+                  </div>
+                </div>
+                <p class="text-[9.5px] text-red-600/90 leading-tight">
+                  ※ 請依照上方標示之「應匯款金額」進行轉帳，剩餘 100 元取件時超商付款即可。
+                </p>
               </div>
+
               <p class="text-[10px] text-amber-900/80 leading-relaxed">
                 請於填單前後完成轉帳，後續將以您回報的「帳號末五碼」於試算表即時對帳。
               </p>
@@ -782,7 +793,7 @@
     // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
     const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
     const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
-    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzFTtlK4BCak2MFWhwRJspJhnHIac_2q7WoNrmnEKgmeawXsuvkTTbqE819NrOwUkOMEg/exec";
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzTsQY-_S665zkGXSzaLwzgW6z3xd8ZzR5vY1QMxNfKCPC4-jPO4Y5dVTAh0s9DZ2sntw/exec";
 
     // ★★★ 7-11 賣貨便賣場網址設定 ★★★
     const SHIP_FREE_URL = "https://myship.7-11.com.tw/general/detail/GM2610137933867";
@@ -1373,7 +1384,7 @@
       const isVipMember = currentMember && currentMember.level === 'vip';
       const isSilverMember = currentMember && currentMember.level === 'silver';
 
-      // 1. 計算商品折扣金額 (金卡會員 享有 95 折，四捨五入)
+      // 1. 計算會員 95 折與優惠碼折抵
       let finalPrice = totalRaw;
       if (isVipMember) {
         finalPrice = Math.round(totalRaw * 0.95);
@@ -1386,7 +1397,63 @@
         if (discountRow) discountRow.classList.add('hidden');
       }
 
+      // 套用優惠碼折抵 -NT$ 30
+      const couponRow = document.getElementById('checkout-coupon-row');
+      const discountSubtext = document.getElementById('checkout-discount-subtext');
+      
+      let couponDiscountVal = 0;
+      if (appliedCoupon) {
+        couponDiscountVal = 30;
+        finalPrice = Math.max(0, finalPrice - couponDiscountVal);
+        if (couponRow) couponRow.classList.remove('hidden');
+      } else {
+        if (couponRow) couponRow.classList.add('hidden');
+      }
+
       if (priceEl) priceEl.innerText = `NT$ ${finalPrice.toLocaleString()}`;
+
+      // 更新折扣說明小字
+      if (discountSubtext) {
+        if (isVipMember && appliedCoupon) {
+          discountSubtext.innerText = "（已扣除 95 折與優惠碼 30 元）";
+        } else if (isVipMember) {
+          discountSubtext.innerText = "（已扣除 95 折優惠）";
+        } else if (appliedCoupon) {
+          discountSubtext.innerText = "（已扣除專屬優惠碼 30 元）";
+        } else {
+          discountSubtext.innerText = "（未套用折扣）";
+        }
+      }
+
+      // ★ 同步更新 Step 2 (匯款確認頁面) 的實時試算明細卡片 ★
+      const step2Raw = document.getElementById('step2-raw-total');
+      const step2DiscRow = document.getElementById('step2-discount-row');
+      const step2DiscVal = document.getElementById('step2-discount-val');
+      const step2CpnRow = document.getElementById('step2-coupon-row');
+      const step2CpnBadge = document.getElementById('step2-coupon-badge');
+      const step2FinalRemit = document.getElementById('step2-final-remit');
+
+      if (step2Raw) step2Raw.innerText = `NT$ ${totalRaw.toLocaleString()}`;
+      
+      if (isVipMember) {
+        const memDisc = totalRaw - Math.round(totalRaw * 0.95);
+        if (step2DiscRow) step2DiscRow.classList.remove('hidden');
+        if (step2DiscVal) step2DiscVal.innerText = `-NT$ ${memDisc.toLocaleString()}`;
+      } else {
+        if (step2DiscRow) step2DiscRow.classList.add('hidden');
+      }
+
+      if (appliedCoupon) {
+        if (step2CpnRow) step2CpnRow.classList.remove('hidden');
+        if (step2CpnBadge) step2CpnBadge.classList.remove('hidden');
+      } else {
+        if (step2CpnRow) step2CpnRow.classList.add('hidden');
+        if (step2CpnBadge) step2CpnBadge.classList.add('hidden');
+      }
+
+      // 匯款金額 = finalPrice - 100 元 (尾款)
+      const actualRemit = Math.max(0, finalPrice - 100);
+      if (step2FinalRemit) step2FinalRemit.innerText = `NT$ ${actualRemit.toLocaleString()}`;
 
       // 2. 運費資格判定
       if (isVipMember) {
@@ -1401,6 +1468,68 @@
         const diff = FREE_SHIPPING_THRESHOLD - totalRaw;
         badgeEl.innerHTML = `<span class="text-stone-500">超商運費依 7-11 規定</span><span class="text-stone-400 text-[10px]">（還差 NT$ ${diff.toLocaleString()} 享滿額免運）</span>`;
       }
+    }
+
+    
+    // ★★★ 優惠碼系統 (折抵 NT$ 30) ★★★
+    let appliedCoupon = null; // 當前套用之優惠碼代碼
+
+    // 預設支援之 300 組優惠碼快取清單 (確保離線或任何環境皆能秒速驗證通過)
+    const VALID_COUPONS_LIST = ['2525PL', '278G4F', '297MHU', '29DKGR', '2HYNTY', '2K4WZ3', '2PMZ2R', '2QPCPX', '376NHK', '38WH4Q', '3B3MCB', '3G69JA', '3G8BZH', '3H2TAS', '3J5VE5', '3LT7BK', '3MHVH5', '4DYVSB', '4KAZR4', '4PFZG3', '4QK25C', '4QM77N', '4QMWNH', '4T9MSY', '4VR5RZ', '4XLENL', '55ZE28', '56DNN2', '56MBFA', '5D847E', '5G4E4Z', '5JD337', '5JJV59', '5MNZNF', '5P53V9', '5UG4EA', '5X359N', '5X7LX4', '5ZLK25', '678TJP', '679GZT', '6CQ325', '6FEFLZ', '6KPXPE', '6KZR6U', '6MA7H6', '6NZ7E3', '6RM67H', '6RP6AU', '6WYUUQ', '6YVSUH', '6ZK2SB', '75EMNE', '7AKDG7', '7D7DQ4', '7ECL85', '7F3MJB', '7FLGEH', '7J4RCA', '7J7K7W', '7KH5MX', '7KL387', '7PWL77', '7RZZXP', '7U98S7', '825W3D', '85YU4C', '86M6ZH', '8AUE83', '8BAK5A', '8ESLMC', '8FHGM4', '8HUZP5', '8NCAZU', '8UFFU7', '8YKJTK', '8YZ2ZN', '8ZGP5R', '97CKUX', '9BPPLB', '9GM7BL', '9HYMJP', '9N4CDM', '9UC8DN', '9Y87ZF', '9YWNFT', 'A28GAN', 'A47R9B', 'A4FWSF', 'A62AHA', 'A6BECC', 'A98GTP', 'ACNFSH', 'AHJUTK', 'AHSFGC', 'AN74DR', 'ANE3UX', 'ATJX47', 'AYVJE5', 'B2B7UJ', 'B43USC', 'BC7M28', 'BEY2FC', 'BH4JJC', 'BLV68J', 'BPYJUD', 'BSTFAR', 'BZQUXB', 'C5YLT6', 'C6232Y', 'C7LWFY', 'CAPGDU', 'CAW3EY', 'CC7ZV7', 'CDMAWU', 'CKBGWQ', 'CLC9MA', 'CPASFU', 'CUG6N9', 'CVVBRM', 'CW54C6', 'CYLUKN', 'DCXR2K', 'DGMVBZ', 'DJYBV9', 'DPA9C4', 'DRF2QB', 'DRLN9E', 'DS2JCB', 'DSEDAH', 'DSFNLM', 'DUFPLL', 'DZ8R2M', 'E3XX6D', 'E7YMEK', 'E8X3KU', 'E9FFMX', 'EAEMT3', 'EFF4BD', 'EHWTGE', 'EYHFLJ', 'F4ED8K', 'F4RPPS', 'F82458', 'FDV6LW', 'FG22LX', 'FR2MJY', 'FU3AYW', 'FVQYNG', 'FWNX2Z', 'FZNKUY', 'G3SMHZ', 'G99RPC', 'GB6N2L', 'GGFTA7', 'GH2W65', 'GLUGNT', 'GS8QW6', 'GTZE6D', 'GUPP8A', 'GZPP7A', 'H4AH5R', 'H5TTUV', 'HCWQEJ', 'HFTWZZ', 'HM5D6G', 'HP2ST7', 'HPQ3NV', 'HRZFF4', 'HWFBA3', 'HXAFXH', 'J2963Q', 'J6CSQ2', 'JDETNU', 'JFCMP4', 'JJ5A3L', 'JQRS6T', 'JTAVHK', 'JTJY7V', 'JWN2DD', 'JXYWYN', 'JY3BN2', 'K3YZQU', 'K5KQGD', 'K6NUTZ', 'KCKR5M', 'KFKSC8', 'KG92E4', 'KHTL8N', 'KJKH3D', 'KKPBTJ', 'KZCRQL', 'L2QDFE', 'L4S4HB', 'LDE9F9', 'LH5JSM', 'LH8SYH', 'LK5QKL', 'LKGL9X', 'LLH2YE', 'LM8V4W', 'LQUAS7', 'LRHD2Y', 'LYEYJN', 'M3X4QK', 'M5YWQB', 'M8G8JJ', 'MB5F5Z', 'MBKZQD', 'MKTKRS', 'MSYACQ', 'MTATTQ', 'MXZXPH', 'N55UVK', 'NJAUBC', 'NMGJHX', 'P2ZHZP', 'P3P3TY', 'P79KJC', 'PEFGE5', 'PKM3UL', 'PMQ33Z', 'PN6CLS', 'PVPXEY', 'PXLAHG', 'Q2847Q', 'Q6R66R', 'Q8CFTQ', 'QBBFFF', 'QDTFTE', 'QH52LM', 'QJFD7V', 'QPCH52', 'QPK5AF', 'QQ5FQV', 'QQSEVP', 'QRTAA4', 'R49TRW', 'RTVC48', 'RV8XRG', 'RVE7T9', 'RZ28VL', 'S9CJCX', 'SL9M5U', 'SNWTFX', 'SRUARF', 'T5CABV', 'T66KPE', 'TJGYYU', 'TN4DR6', 'TSWJRF', 'TXBFTJ', 'U5HTJZ', 'UCZEMK', 'UEP2CJ', 'UL8K4A', 'URFTJ7', 'V5ZTFY', 'VFHMGS', 'VG2CHR', 'VPYD7K', 'VREMND', 'VTKEVV', 'VXWEZY', 'W5MHH9', 'WA2V4D', 'WB9422', 'WC395V', 'WHY5SV', 'WNGHXZ', 'WUH6TK', 'X5JUPG', 'X6GWYQ', 'X8UTKW', 'X9J3M8', 'XC8GZW', 'XDSMNM', 'XKUGXF', 'XMCCXN', 'XMMBZK', 'XT4LRE', 'XTBD2J', 'XUCX5Q', 'XVYA99', 'XVYPK8', 'XYK5MJ', 'Y7PSR7', 'YDFB3K', 'YHR69L', 'YJANSC', 'YM4WR5', 'YT5SCW', 'YWJ4PX', 'Z34NA2', 'ZDXRHX', 'ZF3QTS', 'ZGMLXP', 'ZHYTXE', 'ZK5BGE', 'ZXTZJ4'];
+
+    // 套用優惠碼
+    function applyCoupon() {
+      const input = document.getElementById('coupon-input');
+      if (!input) return;
+      const code = input.value.trim().toUpperCase();
+
+      if (!code || code.length !== 6) {
+        alert('請輸入正確的 6 碼優惠碼！');
+        return;
+      }
+
+      // 檢查是否在 300 組有效清單中
+      if (!VALID_COUPONS_LIST.includes(code)) {
+        alert('無效的優惠碼！請確認英文字母與數字是否輸入正確。');
+        return;
+      }
+
+      // 檢查此優惠碼是否已在過往訂單中使用過
+      const alreadyUsedInOrders = ordersData.some(o => o.items && o.items.includes(code));
+      if (alreadyUsedInOrders) {
+        alert('此優惠碼已經被使用過囉！每組優惠碼限用一次。');
+        return;
+      }
+
+      appliedCoupon = code;
+      const appliedBox = document.getElementById('coupon-applied-box');
+      const appliedCodeEl = document.getElementById('applied-coupon-code');
+      const couponInputWrap = document.getElementById('coupon-input');
+      const couponApplyBtn = document.getElementById('coupon-apply-btn');
+
+      if (appliedBox) appliedBox.classList.remove('hidden');
+      if (appliedCodeEl) appliedCodeEl.innerText = code;
+      if (couponInputWrap) { couponInputWrap.disabled = true; couponInputWrap.value = code; }
+      if (couponApplyBtn) { couponApplyBtn.disabled = true; couponApplyBtn.classList.add('opacity-50'); }
+
+      updateCheckoutShippingStatus();
+      showToastNotification(`🎟️ 優惠碼【${code}】套用成功，已折抵 NT$ 30！`);
+      lucide.createIcons();
+    }
+
+    // 移除優惠碼
+    function removeCoupon() {
+      appliedCoupon = null;
+      const appliedBox = document.getElementById('coupon-applied-box');
+      const couponInputWrap = document.getElementById('coupon-input');
+      const couponApplyBtn = document.getElementById('coupon-apply-btn');
+
+      if (appliedBox) appliedBox.classList.add('hidden');
+      if (couponInputWrap) { couponInputWrap.disabled = false; couponInputWrap.value = ''; }
+      if (couponApplyBtn) { couponApplyBtn.disabled = false; couponApplyBtn.classList.remove('opacity-50'); }
+
+      updateCheckoutShippingStatus();
+      lucide.createIcons();
     }
 
     let currentCategory = 'all';
@@ -1514,7 +1643,7 @@
               <img src="${coverImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
               ${(p.category === 'instock' || (p.tag && p.tag.includes('現貨'))) 
                 ? `<span class="absolute top-2 left-2 bg-amber-600/90 text-white text-[10px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">⚡ ${p.tag || '現貨'}</span>`
-                : (p.tag ? `<span class="absolute top-2 left-2 bg-stone-900/80 backdrop-blur-sm text-white text-[10px] font-medium px-2.5 py-0.5 rounded-full">${p.tag}</span>` : '')}
+                : (p.tag ? `<span class="absolute top-2 left-2 bg-stone-900/80 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full">${p.tag}</span>` : '')}
             </div>
             <div class="p-3.5 flex flex-col flex-1 justify-between gap-1">
               <div>
@@ -1779,6 +1908,9 @@
       if (isVipMember) {
         finalAmount = Math.round(totalRaw * 0.95);
       }
+      if (appliedCoupon) {
+        finalAmount = Math.max(0, finalAmount - 30);
+      }
 
       // 是否免運判定
       const isFreeShipping = isVipMember || isSilverMember || isSurveyVip || (totalRaw >= FREE_SHIPPING_THRESHOLD);
@@ -1794,8 +1926,9 @@
         shippingTag = "【滿額免運】";
       }
 
-      // 多件商品品項字串明細
-      const itemsDetail = cart.map(i => `[${i.id}] ${i.name} (${i.color}/${i.size}) x${i.qty}`).join(", ") + " " + shippingTag;
+      // 多件商品品項字串明細 (若有使用優惠碼一併標記)
+      const couponTag = appliedCoupon ? `【折抵券-30:${appliedCoupon}】` : "";
+      const itemsDetail = cart.map(i => `[${i.id}] ${i.name} (${i.color}/${i.size}) x${i.qty}`).join(", ") + " " + shippingTag + (couponTag ? " " + couponTag : "");
 
       const randomOrderId = "RM-" + Math.floor(100 + Math.random() * 900);
 
@@ -1814,7 +1947,8 @@
         est_delivery: "採購連線確認中",
         order_time: new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
         is_free_shipping: isFreeShipping,
-        shipping_tag: shippingTag
+        shipping_tag: shippingTag,
+        coupon_code: appliedCoupon || ""
       };
 
       if (GOOGLE_SCRIPT_API_URL && !GOOGLE_SCRIPT_API_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE")) {
@@ -1900,6 +2034,7 @@
       // 清空購物車與重置表單
       cart = [];
       saveCart();
+      removeCoupon();
       updateCartBadge();
       const checkoutForm = document.getElementById('checkout-form');
       if (checkoutForm) checkoutForm.reset();
@@ -2160,3 +2295,4 @@
   </script>
 </body>
 </html>
+```[cite: 12]
