@@ -543,6 +543,56 @@
             </div>
           </div>
 
+        <!-- 優惠折扣明細 -->
+            <div id="checkout-discount-row" class="hidden flex justify-between items-center pt-1.5 border-t border-stone-200/60 text-emerald-700 text-xs font-medium">
+              <span>💎 金卡會員專屬 95 折：</span>
+              <span id="checkout-discount-amount">-NT$ 0</span>
+            </div>
+            <div id="checkout-coupon-row" class="hidden flex justify-between items-center pt-1 border-t border-stone-200/60 text-emerald-700 text-xs font-medium">
+              <span>🎟️ 專屬優惠碼折抵：</span>
+              <span id="checkout-coupon-amount">-NT$ 30</span>
+            </div>
+            <div class="flex justify-between items-center pt-1.5 border-t border-stone-200/60">
+              <div>
+                <span class="text-stone-500">應匯款商品總額：</span>
+                <span class="text-[10px] text-stone-400 block" id="checkout-discount-subtext">（已計入專屬折扣）</span>
+              </div>
+              <span class="text-base font-serif font-bold text-stone-900" id="checkout-item-price">NT$ 0</span>
+            </div>
+            <!-- 免運進度徽章 -->
+            <div id="checkout-shipping-badge" class="pt-1 text-[11px] flex items-center justify-between text-stone-600">
+              <!-- JS 動態計算更新 -->
+            </div>
+          </div>
+
+          <!-- 優惠碼輸入區塊 (輸入折 30 元) -->
+          <div class="bg-stone-50 border border-stone-200/80 p-3 rounded-xl space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-stone-700 text-xs flex items-center gap-1.5">
+                <span>🎟️</span> 專屬優惠代碼
+              </span>
+              <span id="coupon-tag-info" class="text-[10px] text-stone-400">輸入折抵 NT$ 30</span>
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="coupon-input" placeholder="請輸入 6 碼英數優惠碼" maxlength="6" 
+                     class="flex-1 uppercase bg-white border border-stone-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-stone-900 font-mono text-xs tracking-wider placeholder:text-stone-300">
+              <button type="button" onclick="applyCoupon()" id="coupon-apply-btn" 
+                      class="bg-stone-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-stone-800 transition flex items-center gap-1 shadow-xs">
+                <span>套用</span>
+              </button>
+            </div>
+            <!-- 套用成功訊息 -->
+            <div id="coupon-applied-box" class="hidden p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] flex items-center justify-between">
+              <div class="flex items-center gap-1.5 font-medium">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>已套用優惠碼：<strong id="applied-coupon-code" class="font-mono text-xs"></strong>（折抵 -NT$ 30）</span>
+              </div>
+              <button type="button" onclick="removeCoupon()" class="text-stone-400 hover:text-red-600 underline text-[10px]">
+                移除
+              </button>
+            </div>
+          </div>
+
           <!-- 第一步按鈕：前往下一步 -->
           <div class="pt-2">
             <button type="button" onclick="goToCheckoutStep(2)" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium text-xs hover:bg-stone-800 transition flex items-center justify-center gap-1.5 shadow-sm">
@@ -732,7 +782,7 @@
     // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
     const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
     const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
-    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzTsQY-_S665zkGXSzaLwzgW6z3xd8ZzR5vY1QMxNfKCPC4-jPO4Y5dVTAh0s9DZ2sntw/exec";
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzFTtlK4BCak2MFWhwRJspJhnHIac_2q7WoNrmnEKgmeawXsuvkTTbqE819NrOwUkOMEg/exec";
 
     // ★★★ 7-11 賣貨便賣場網址設定 ★★★
     const SHIP_FREE_URL = "https://myship.7-11.com.tw/general/detail/GM2610137933867";
