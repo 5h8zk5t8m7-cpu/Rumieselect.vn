@@ -567,12 +567,18 @@
               <p><strong>帳號號碼：</strong> <span id="bank-acc-text" class="font-mono font-semibold">24414050548389</span></p>
               <p><strong>戶名：</strong> 邱Ｏ沂</p>
             </div>
-            <div class="pt-2 border-t border-amber-200/60 space-y-1">
-              <div class="p-2 rounded-lg bg-amber-100/90 border border-amber-300 text-amber-950 font-medium text-[11px] flex items-center gap-1.5 shadow-xs">
-                <span>💡</span>
-                <span>匯款金額為訂單總價 - 100 元，100 元會作為尾款於取貨時付款～</span>
+            <div class="pt-2 border-t border-amber-200/60 space-y-1.5">
+              <div class="p-2.5 rounded-xl bg-red-50 border-2 border-red-500 text-red-800 font-bold text-xs flex items-start gap-2 shadow-xs">
+                <span class="text-base leading-none">⚠️</span>
+                <div class="space-y-0.5">
+                  <div class="text-red-600 font-extrabold text-[12px] tracking-wide">【匯款金額注意】</div>
+                  <div class="text-[11px] font-medium leading-relaxed">
+                    實際匯款金額為：<span class="text-red-600 font-black underline underline-offset-2 text-xs">訂單總價 - 100 元</span>！<br>
+                    <span class="text-stone-500 font-normal">（留 100 元作為 7-11 賣貨便尾款，取件付款即可）</span>
+                  </div>
+                </div>
               </div>
-              <p class="text-[10px] text-amber-800/80 leading-relaxed">
+              <p class="text-[10px] text-amber-900/80 leading-relaxed">
                 請於填單前後完成轉帳，後續將以您回報的「帳號末五碼」於試算表即時對帳。
               </p>
             </div>
@@ -582,8 +588,12 @@
           <div class="space-y-2.5">
             <div class="grid grid-cols-2 gap-2.5">
               <div class="space-y-1">
-                <label class="font-medium text-stone-700">姓名 (同賣貨便姓名) <span class="text-red-500">*</span></label>
-                <input type="text" id="cust-name" placeholder="如：林小姐" class="w-full bg-white border border-stone-200 rounded-lg p-2.5 focus:outline-none focus:border-stone-800 text-xs">
+                <div class="flex items-center justify-between">
+                  <label class="font-bold text-stone-800">姓名 <span class="text-red-500">*</span></label>
+                  <span class="text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded leading-none">⚠️ 務必同賣貨便</span>
+                </div>
+                <input type="text" id="cust-name" placeholder="請填寫賣貨便取件本名" class="w-full bg-white border border-stone-200 focus:border-red-500 focus:ring-1 focus:ring-red-400 rounded-lg p-2.5 focus:outline-none text-xs">
+                <p class="text-[9.5px] text-red-500 font-medium leading-tight">※ 姓名不一致將無法順利出貨！</p>
               </div>
               <div class="space-y-1">
                 <label class="font-medium text-stone-700">手機號碼 (查單帳號) <span class="text-red-500">*</span></label>
@@ -920,7 +930,7 @@
       closeMemberModal();
     }
 
-    // 處理手機號碼登入
+    // 處理手機號碼登入 (必須是註冊過或有歷史訂單之會員才能登入)
     function handleMemberLogin() {
       const phoneInput = document.getElementById('member-phone-input').value.trim();
       if (!phoneInput || phoneInput.length < 9) {
@@ -928,22 +938,21 @@
         return;
       }
 
-      currentMember = getMemberInfoByPhone(phoneInput);
-      if (!currentMember) {
-        currentMember = {
-          phone: phoneInput,
-          name: "新朋友",
-          email: "",
-          totalSpent: 0,
-          orderCount: 0,
-          hasUsedSurveyFreeShip: false,
-          level: 'normal',
-          levelTitle: '🌱 一般顧客',
-          discountRate: 1
-        };
+      const cleanPhone = phoneInput.replace(/^'/, '');
+      const registeredName = localStorage.getItem('rumie_member_name_' + cleanPhone);
+      const hasOrderHistory = ordersData.some(o => o.phone && o.phone.trim().replace(/^'/, '') === cleanPhone);
+
+      // 若未註冊過且無任何歷史訂單，禁止登入並引導至註冊頁面
+      if (!registeredName && !hasOrderHistory) {
+        alert('此手機號碼尚未註冊！請先填寫資料完成會員註冊～');
+        switchMemberView('register');
+        const regPhoneInput = document.getElementById('reg-phone');
+        if (regPhoneInput) regPhoneInput.value = cleanPhone;
+        return;
       }
 
-      localStorage.setItem('rumie_member_phone', phoneInput);
+      currentMember = getMemberInfoByPhone(cleanPhone);
+      localStorage.setItem('rumie_member_phone', cleanPhone);
       updateHeaderMemberUI();
       openMemberModal();
     }
@@ -970,6 +979,7 @@
       // 保存註冊資訊
       localStorage.setItem('rumie_member_name_' + phone, name);
       localStorage.setItem('rumie_member_email_' + phone, email);
+      localStorage.setItem('rumie_registered_' + phone, 'true');
       localStorage.setItem('rumie_member_phone', phone);
 
       // 自動讀取或建立會員
@@ -1008,6 +1018,28 @@
 
     // ★★★ 購物車系統 (Cart System) ★★★
     let cart = [];
+
+    // 儲存購物車至瀏覽器快取 (關閉網頁/重新整理不遺失)
+    function saveCart() {
+      try {
+        localStorage.setItem('rumie_cart', JSON.stringify(cart));
+      } catch (e) {
+        console.error('Save cart error', e);
+      }
+    }
+
+    // 讀取瀏覽器儲存之購物車
+    function loadCart() {
+      try {
+        const saved = localStorage.getItem('rumie_cart');
+        if (saved) {
+          cart = JSON.parse(saved);
+        }
+      } catch (e) {
+        cart = [];
+      }
+      updateCartBadge();
+    }
 
     // 輕量 Toast 提示框
     function showToastNotification(msg) {
@@ -1053,6 +1085,7 @@
 
       updateCartBadge();
       closeProductModal();
+      saveCart();
       switchTab('shop'); // 確保主動跳回商品型錄頁面
       showToastNotification(`✨ 已成功加入購物車！`);
     }
@@ -1104,6 +1137,7 @@
         cart.splice(idx, 1);
       }
       updateCartBadge();
+      saveCart();
       renderCart();
     }
 
@@ -1111,6 +1145,7 @@
       if (!cart[idx]) return;
       cart.splice(idx, 1);
       updateCartBadge();
+      saveCart();
       renderCart();
     }
 
@@ -1375,7 +1410,7 @@
               <img src="${coverImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
               ${(p.category === 'instock' || (p.tag && p.tag.includes('現貨'))) 
                 ? `<span class="absolute top-2 left-2 bg-amber-600/90 text-white text-[10px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">⚡ ${p.tag || '現貨'}</span>`
-                : (p.tag ? `<span class="absolute top-2 left-2 bg-stone-900/80 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full">${p.tag}</span>` : '')}
+                : (p.tag ? `<span class="absolute top-2 left-2 bg-stone-900/80 backdrop-blur-sm text-white text-[10px] font-medium px-2.5 py-0.5 rounded-full">${p.tag}</span>` : '')}
             </div>
             <div class="p-3.5 flex flex-col flex-1 justify-between gap-1">
               <div>
@@ -1760,6 +1795,7 @@
 
       // 清空購物車與重置表單
       cart = [];
+      saveCart();
       updateCartBadge();
       const checkoutForm = document.getElementById('checkout-form');
       if (checkoutForm) checkoutForm.reset();
@@ -1875,7 +1911,8 @@
 
     // 自動讀取試算表
     function initData() {
-      // 1. 先立即渲染已有的商品，確保客人一進來立刻看到
+      // 1. 先讀取已保存之購物車與渲染已有商品
+      loadCart();
       renderProducts();
       initMemberAuth();
 
