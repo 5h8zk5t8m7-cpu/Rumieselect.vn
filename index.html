@@ -1622,19 +1622,62 @@
       renderProducts();
     }
 
-    // 渲染商品清單
-    function renderProducts() {
-      const grid = document.getElementById('product-grid');
-      const countEl = document.getElementById('product-count');
-      
-      const filtered = productsData.filter(p => {
+    const filtered = productsData.filter(p => {
+        const pCat = (p.category || '').toLowerCase();
+        const pName = (p.name || '').toLowerCase();
+        const pTag = (p.tag || '').toLowerCase();
+        const isMen = pCat.startsWith('men') || pName.includes('男') || pTag.includes('男');
+
+        // 1. 全部選品
+        if (currentMainGroup === 'all' && currentCategory === 'all') {
+          return true;
+        }
+
+        // 2. 現貨專區
+        if (currentCategory === 'instock' || currentMainGroup === 'instock') {
+          return pCat === 'instock' || pTag.includes('現貨') || pName.includes('現貨');
+        }
+
+        // 3. 穿搭推薦
+        if (currentCategory === 'coord' || currentMainGroup === 'coord') {
+          return pCat === 'coord' || pTag.includes('搭') || pTag.includes('套裝') || pName.includes('搭') || pName.includes('套裝');
+        }
+
+        // 4. ★★★ 男裝專區核心分類過濾 ★★★
+        if (currentMainGroup === 'men') {
+          if (!isMen) return false;
+          if (currentCategory === 'men_all') return true;
+          // 短袖與襯衫放一起
+          if (currentCategory === 'men_tops') {
+            return pCat.includes('tops') || pCat.includes('shirt') || 
+                   pName.includes('短袖') || pName.includes('襯衫') || 
+                   pName.includes('短t') || pName.includes('polo');
+          }
+          // 長袖與外套放一起
+          if (currentCategory === 'men_outer') {
+            return pCat.includes('outer') || pName.includes('長袖') || 
+                   pName.includes('外套') || pName.includes('夾克') || 
+                   pName.includes('西裝') || pName.includes('衛衣') || 
+                   pName.includes('帽t') || pName.includes('長t');
+          }
+          // 褲子自己一區
+          if (currentCategory === 'men_bottoms') {
+            return pCat.includes('bottom') || pName.includes('褲');
+          }
+          return true;
+        }
+
+        // 5. 女裝專區（排除男裝）
+        if (currentMainGroup === 'women') {
+          if (isMen) return false;
+          if (currentCategory === 'women_all') return true;
+          return pCat === currentCategory || pCat.includes(currentCategory);
+        }
+
+        // 6. 其他分類預設
         if (currentCategory === 'all') return true;
-        if (currentCategory === 'instock') {
-          return p.category === 'instock' || (p.tag && p.tag.includes('現貨')) || (p.name && p.name.includes('現貨'));
-        }
-        if (currentCategory === 'coord') {
-          return p.category === 'coord' || (p.tag && (p.tag.includes('搭') || p.tag.includes('套裝'))) || (p.name && (p.name.includes('搭') || p.name.includes('套裝')));
-        }
+        return pCat === currentCategory || pCat.includes(currentCategory);
+      });
         return p.category === currentCategory;
       });
       if (countEl) countEl.innerText = `顯示 ${filtered.length} 件選品`;
@@ -2218,22 +2261,23 @@
                   return url;
                 });
 
-                let cat = (rawCat || '').toLowerCase().trim();
-                if (cat.includes('現貨') || cat === 'instock') {
-                  cat = 'instock';
-                } else if (cat.includes('搭') || cat.includes('套裝') || cat.includes('穿搭') || cat === 'coord') {
-                  cat = 'coord';
-                } else if (cat.includes('上衣') || cat.includes('襯衫') || cat.includes('背心') || cat === 'tops') {
-                  cat = 'tops';
-                } else if (cat.includes('褲') || cat.includes('洋裝') || cat.includes('裙') || cat === 'bottoms') {
-                  cat = 'bottoms';
-                } else if (cat.includes('外套') || cat.includes('罩衫') || cat === 'outerwear') {
-                  cat = 'outerwear';
-                } else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat.includes('鞋') || cat === 'accessories' || cat === 'shoes') {
-                  cat = 'accessories';
-                } else {
-                  cat = 'tops';
-                }
+              let cat = (rawCat || '').toLowerCase().trim();
+if (cat.includes('現貨') || cat === 'instock') {
+  cat = 'instock';
+} else if (cat.includes('搭') || cat.includes('套裝') || cat.includes('穿搭') || cat === 'coord') {
+  cat = 'coord';
+} else if (cat.includes('包') || cat.includes('配件') || cat.includes('飾品') || cat.includes('鞋') || cat === 'accessories' || cat === 'shoes') {
+  cat = 'accessories';
+} else if (cat.includes('外套') || cat.includes('罩衫') || cat.includes('outerwear') || cat.includes('men_outer')) {
+  cat = cat.includes('men') ? 'men_outer' : 'outerwear';
+} else if (cat.includes('褲') || cat.includes('洋裝') || cat.includes('裙') || cat.includes('bottoms') || cat.includes('men_bottoms')) {
+  cat = cat.includes('men') ? 'men_bottoms' : 'bottoms';
+} else if (cat.includes('上衣') || cat.includes('襯衫') || cat.includes('背心') || cat.includes('tops') || cat.includes('men_tops')) {
+  cat = cat.includes('men') ? 'men_tops' : 'tops';
+} else {
+  // 若試算表直接輸入英文代碼（如 men_tops、men_outer），直接保留原值，不覆蓋為 tops
+  cat = cat || 'tops';
+}
 
                 let numPrice = Number(rawPrice.toString().replace(/[^0-9]/g, '')) || 0;
 
