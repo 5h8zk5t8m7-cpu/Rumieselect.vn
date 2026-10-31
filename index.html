@@ -179,38 +179,24 @@
         </div>
       </div>
 
-     <!-- 分類篩選與商品數量 (手機版雙層精緻導航，單排滑動不換行) -->
-      <div class="space-y-2.5 border-b border-stone-200/80 pb-3.5">
-        <!-- 第一層：大專區切換 (主分區) -->
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="main-group-tabs">
-            <button onclick="switchMainGroup('all')" class="main-group-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-stone-900 text-white shadow-xs flex-shrink-0" data-group="all">全部選品</button>
-            <button onclick="switchMainGroup('men')" class="main-group-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-group="men">
-              <span>👔</span> 男裝專區
-            </button>
-            <button onclick="switchMainGroup('women')" class="main-group-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-group="women">
-              <span>👩</span> 女裝選品
-            </button>
-            <button onclick="switchMainGroup('instock')" class="main-group-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-group="instock">
-              <span>⚡</span> 現貨
-            </button>
-            <button onclick="switchMainGroup('coord')" class="main-group-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-group="coord">
-              <span>✨</span> 穿搭推薦
-            </button>
-          </div>
-          <div class="text-[11px] text-stone-400 font-light flex-shrink-0 hidden sm:block" id="product-count">
-            顯示 0 件選品
-          </div>
+      <!-- 分類篩選與商品數量 -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/80 pb-4">
+        <!-- 分類標籤 (全部樣式統一圓潤膠囊) -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+          <button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow-sm flex-shrink-0" data-cat="all">全部選品</button>
+          <button onclick="filterCategory('instock')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-cat="instock">
+            <span>⚡</span> 現貨專區
+          </button>
+          <button onclick="filterCategory('coord')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0" data-cat="coord">
+            <span>✨</span> 小編幫你搭
+          </button>
+          <button onclick="filterCategory('tops')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="tops">上衣襯衫</button>
+          <button onclick="filterCategory('bottoms')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="bottoms">洋裝下著</button>
+          <button onclick="filterCategory('outerwear')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="outerwear">外套外搭</button>
+          <button onclick="filterCategory('accessories')" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex-shrink-0" data-cat="accessories">鞋包配件</button>
         </div>
-
-        <!-- 第二層：次分類標籤列 (動態依專區切換，單排橫向滑動) -->
-        <div class="flex items-center justify-between gap-2 pt-0.5">
-          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 w-full" id="sub-cat-bar">
-            <!-- JS 動態填入子分類膠囊 -->
-          </div>
-          <div class="text-[10px] text-stone-400 font-light flex-shrink-0 sm:hidden whitespace-nowrap" id="product-count-mobile">
-            0 件
-          </div>
+        <div class="text-xs text-stone-500 font-light text-right" id="product-count">
+          顯示 0 件選品
         </div>
       </div>
 
@@ -826,7 +812,7 @@
     // ★★★ 試算表發布與 Google Apps Script 網址設定 ★★★
     const PRODUCTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=0&single=true&output=csv";
     const ORDERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR7Wo-VdB1fqnjCF8NsB2-tirZFevV3XxphodHWy7LZfV-IeFMZtneI1a3KzPT131870yNGPaqxu5Ed/pub?gid=1&single=true&output=csv";
-    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzuAs92fMdkCwW0fsC5aY0-sTymOTNPM4RDssTG6V8ryacaVSOy3N7FhupKnf7hOW7txw/exec";
+    const GOOGLE_SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzTsQY-_S665zkGXSzaLwzgW6z3xd8ZzR5vY1QMxNfKCPC4-jPO4Y5dVTAh0s9DZ2sntw/exec";
 
     // ★★★ 7-11 賣貨便賣場網址設定 ★★★
     const SHIP_FREE_URL = "https://myship.7-11.com.tw/general/detail/GM2610137933867";
@@ -1624,139 +1610,34 @@
       lucide.createIcons();
     }
 
-  // ★★★ 雙層分類與男裝專區邏輯 ★★★
-    let currentMainGroup = 'all'; // all, men, women, instock, coord
-    let currentCategory = 'all';
-
-    // 子分類配置
-    const SUB_CATEGORIES = {
-      all: [
-        { label: '全部商品', cat: 'all' },
-        { label: '👕 短袖/襯衫', cat: 'tops' },
-        { label: '🧥 長袖/外套', cat: 'outerwear' },
-        { label: '👗 洋裝裙裝', cat: 'bottoms' },
-        { label: '👜 鞋包配件', cat: 'accessories' }
-      ],
-      men: [
-        { label: '👔 全部男裝', cat: 'men_all' },
-        { label: '👕 短袖 / 襯衫', cat: 'men_tops' },
-        { label: '🧥 長袖 / 外套', cat: 'men_outer' },
-        { label: '👖 褲裝下著', cat: 'men_bottoms' }
-      ],
-      women: [
-        { label: '👩 全部女裝', cat: 'women_all' },
-        { label: '上衣襯衫', cat: 'tops' },
-        { label: '洋裝下著', cat: 'bottoms' },
-        { label: '外套外搭', cat: 'outerwear' },
-        { label: '鞋包配件', cat: 'accessories' }
-      ],
-      instock: [
-        { label: '⚡ 全部現貨', cat: 'instock' }
-      ],
-      coord: [
-        { label: '✨ 全部穿搭套裝', cat: 'coord' }
-      ]
-    };
-
-    // 切換第一層主分區
-    function switchMainGroup(group) {
-      currentMainGroup = group;
-      
-      document.querySelectorAll('.main-group-btn').forEach(btn => {
-        const isThis = btn.dataset.group === group;
-        btn.className = isThis 
-          ? 'main-group-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-stone-900 text-white shadow-xs flex-shrink-0 flex items-center gap-1' 
-          : 'main-group-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0';
-      });
-
-      const subList = SUB_CATEGORIES[group] || SUB_CATEGORIES.all;
-      currentCategory = subList[0].cat;
-
-      renderSubCatBar();
-      renderProducts();
-    }
-
-    // 渲染第二層子分類按鈕
-    function renderSubCatBar() {
-      const bar = document.getElementById('sub-cat-bar');
-      if (!bar) return;
-
-      const subList = SUB_CATEGORIES[currentMainGroup] || SUB_CATEGORIES.all;
-      bar.innerHTML = subList.map(item => {
-        const isAct = item.cat === currentCategory;
-        return `
-          <button onclick="filterCategory('${item.cat}')" 
-                  class="sub-cat-btn px-3 py-1 rounded-full text-[11px] font-medium transition flex-shrink-0 ${isAct ? 'bg-amber-100 text-amber-900 border border-amber-300 font-semibold' : 'bg-stone-100 text-stone-600 hover:bg-stone-200 border border-transparent'}">
-            ${item.label}
-          </button>
-        `;
-      }).join('');
-    }
-
-    // 點擊第二層子分類
+    // 分類篩選
     function filterCategory(cat) {
       currentCategory = cat;
-      renderSubCatBar();
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        const isThis = btn.dataset.cat === cat;
+        btn.className = isThis 
+          ? 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow-sm flex items-center gap-1 flex-shrink-0' 
+          : 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium transition bg-white text-stone-600 border border-stone-200 hover:border-stone-400 flex items-center gap-1 flex-shrink-0';
+      });
       renderProducts();
     }
 
-    // 渲染商品清單 (支援男裝自動關鍵字識別)
+    // 渲染商品清單
     function renderProducts() {
       const grid = document.getElementById('product-grid');
       const countEl = document.getElementById('product-count');
-      const countMobileEl = document.getElementById('product-count-mobile');
       
       const filtered = productsData.filter(p => {
-        const pCat = (p.category || '').toLowerCase();
-        const pName = (p.name || '').toLowerCase();
-        const pTag = (p.tag || '').toLowerCase();
-        const isMen = pCat.startsWith('men') || pName.includes('男') || pTag.includes('男');
-
-        // 1. 全部選品
-        if (currentMainGroup === 'all' && currentCategory === 'all') {
-          return true;
-        }
-
-        // 2. 現貨專區
-        if (currentCategory === 'instock' || currentMainGroup === 'instock') {
-          return pCat === 'instock' || pTag.includes('現貨') || pName.includes('現貨');
-        }
-
-        // 3. 穿搭推薦
-        if (currentCategory === 'coord' || currentMainGroup === 'coord') {
-          return pCat === 'coord' || pTag.includes('搭') || pTag.includes('套裝') || pName.includes('搭') || pName.includes('套裝');
-        }
-
-        // 4. 男裝專區
-        if (currentMainGroup === 'men') {
-          if (!isMen) return false;
-          if (currentCategory === 'men_all') return true;
-          if (currentCategory === 'men_tops') {
-            return pCat.includes('tops') || pCat.includes('shirt') || pName.includes('短袖') || pName.includes('襯衫') || pName.includes('短t') || pName.includes('polo');
-          }
-          if (currentCategory === 'men_outer') {
-            return pCat.includes('outer') || pName.includes('長袖') || pName.includes('外套') || pName.includes('夾克') || pName.includes('西裝') || pName.includes('衛衣') || pName.includes('帽t') || pName.includes('長t');
-          }
-          if (currentCategory === 'men_bottoms') {
-            return pCat.includes('bottom') || pName.includes('褲');
-          }
-          return true;
-        }
-
-        // 5. 女裝專區
-        if (currentMainGroup === 'women') {
-          if (isMen) return false;
-          if (currentCategory === 'women_all') return true;
-          return pCat === currentCategory || pCat.includes(currentCategory);
-        }
-
-        // 6. 其他分類比對
         if (currentCategory === 'all') return true;
-        return pCat === currentCategory || pCat.includes(currentCategory);
+        if (currentCategory === 'instock') {
+          return p.category === 'instock' || (p.tag && p.tag.includes('現貨')) || (p.name && p.name.includes('現貨'));
+        }
+        if (currentCategory === 'coord') {
+          return p.category === 'coord' || (p.tag && (p.tag.includes('搭') || p.tag.includes('套裝'))) || (p.name && (p.name.includes('搭') || p.name.includes('套裝')));
+        }
+        return p.category === currentCategory;
       });
-
       if (countEl) countEl.innerText = `顯示 ${filtered.length} 件選品`;
-      if (countMobileEl) countMobileEl.innerText = `${filtered.length} 件`;
 
       if (filtered.length === 0) {
         grid.innerHTML = `
@@ -1764,7 +1645,7 @@
             <div class="w-12 h-12 mx-auto rounded-full bg-stone-100 flex items-center justify-center text-stone-400">
               <i data-lucide="package-open" class="w-6 h-6"></i>
             </div>
-            <p class="text-sm text-stone-600 font-medium">目前此分類尚無商品或籌備中</p>
+            <p class="text-sm text-stone-600 font-medium">目前尚無上架商品或連線籌備中</p>
             <p class="text-xs text-stone-400">請至 Google 試算表填入商品資訊，或私訊官方 LINE / IG 詢問連線</p>
           </div>
         `;
@@ -1796,6 +1677,7 @@
       }).join('');
       lucide.createIcons();
     }
+
     // 打開商品詳情彈窗
     function openProductModal(id) {
       const p = productsData.find(item => item.id === id);
@@ -2290,13 +2172,13 @@
       lucide.createIcons();
     }
 
-   // 自動讀取試算表
+    // 自動讀取試算表
     function initData() {
       // 1. 先讀取已保存之購物車與渲染已有商品
       loadCart();
-      renderSubCatBar(); // 👈 就是加這行！
       renderProducts();
       initMemberAuth();
+
       // 2. 背景嘗試同步 Google 試算表
       if (PRODUCTS_CSV_URL && !PRODUCTS_CSV_URL.includes("YOUR_PRODUCTS_CSV_URL_HERE")) {
         Papa.parse(PRODUCTS_CSV_URL, {
